@@ -87,10 +87,11 @@ onMounted(() => {
 const router = useRouter();
 const handleCommand = (command: string) => {
     if (command == 'loginout') {
-        localStorage.removeItem('vuems_name');
-        router.push('/login');
+      localStorage.removeItem('username');
+      localStorage.removeItem('token');
+      router.push('/login');
     } else if (command == 'user') {
-        router.push('/ucenter');
+      router.push('/ucenter');
     }
 };
 

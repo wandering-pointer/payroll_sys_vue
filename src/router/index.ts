@@ -282,13 +282,15 @@ router.beforeEach(async (to, from, next) => {
 
     if (authRequired && token != "") {
         // 如果页面需要验证且存在token，则检查token的有效性
-        if (token == "disabled") {
+        if (token == null) {
             // Token无效，重定向到登录页
+            localStorage.removeItem("username")
             return next('/login');
         }
         const isValid = await checkToken(token);
         if (!isValid) {
-            localStorage.setItem("token", "disabled")
+            localStorage.removeItem("token")
+            localStorage.removeItem("username")
             // Token无效，重定向到登录页
             return next('/login');
         }
