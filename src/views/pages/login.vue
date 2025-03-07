@@ -85,7 +85,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
       if (valid) {
         try {
           // 发送登录请求到后端
-          const response = await axios.post('/api/tryLogin', {
+          const response = await axios.post('/tryLogin', {
             username: param.username,
             password: param.password
           });

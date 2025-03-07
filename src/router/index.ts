@@ -4,12 +4,12 @@ import Home from '../views/home.vue';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import axios from "axios";
-axios.defaults.baseURL ='http://localhost:8080/'; //配置请求地址
+axios.defaults.baseURL ='http://localhost:8080/api/'; //配置请求地址
 
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/homePage',
     },
     {
         path: '/',
@@ -17,13 +17,13 @@ const routes: RouteRecordRaw[] = [
         component: Home,
         children: [
             {
-                path: '/dashboard',
-                name: 'dashboard',
+                path: '/homePage',
+                name: 'homePage',
                 meta: {
                     title: '系统首页',
                     noAuth: true,
                 },
-                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/homePage.vue'),
             },
             {
                 path: '/system-user',
@@ -273,20 +273,42 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     NProgress.start();
-    const role = localStorage.getItem('vuems_name');
-    const permiss = usePermissStore();
 
-    if (!role && to.meta.noAuth !== true) {
-        next('/login');
-    } else if (typeof to.meta.permiss == 'string' && !permiss.key.includes(to.meta.permiss)) {
-        // 如果没有权限，则进入403
-        next('/403');
-    } else {
-        next();
+    const publicPages = ['/login']; // 不需要验证的页面
+    const authRequired = !publicPages.includes(to.path);
+    const token = localStorage.getItem('token');
+
+    if (authRequired && token != "") {
+        // 如果页面需要验证且存在token，则检查token的有效性
+        if (token == "disabled") {
+            // Token无效，重定向到登录页
+            return next('/login');
+        }
+        const isValid = await checkToken(token);
+        if (!isValid) {
+            localStorage.setItem("token", "disabled")
+            // Token无效，重定向到登录页
+            return next('/login');
+        }
     }
+    next();
 });
+
+async function checkToken(token) {
+    try {
+        const response = await axios.post('/checkToken', {token: token}, {
+            headers: {
+                token: token
+            }
+        });
+        return response.data.success;
+    } catch (error) {
+        console.error("Failed to check token:", error);
+        return false;
+    }
+}
 
 router.afterEach(() => {
     NProgress.done();
