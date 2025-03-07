@@ -4,6 +4,7 @@ import Home from '../views/home.vue';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import axios from "axios";
+import {ElMessage} from "element-plus";
 axios.defaults.baseURL ='http://localhost:8080/api/'; //配置请求地址
 
 const routes: RouteRecordRaw[] = [
@@ -223,8 +224,23 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/element/statistic.vue'),
             },
+//
+//========================================= 以下是我自己的 =============================================
+//
+            {
+                path: '/dept-manage',
+                name: 'dept-manage',
+                meta: {
+                    title: '人事资源管理',
+                    permiss: '101',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/department.vue'),
+            },
         ],
     },
+//
+//========================================= 以上是我自己的 =============================================
+//
     {
         path: '/login',
         meta: {
@@ -265,6 +281,14 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import(/* webpackChunkName: "404" */ '../views/pages/404.vue'),
     },
+    {
+        path: '/404',
+        meta: {
+            title: '找不到页面',
+            noAuth: true,
+        },
+        component: () => import(/* webpackChunkName: "404" */ '../views/pages/404.vue'),
+    },
     { path: '/:path(.*)', redirect: '/404' },
 ];
 
@@ -285,16 +309,20 @@ router.beforeEach(async (to, from, next) => {
         if (token == null) {
             // Token无效，重定向到登录页
             localStorage.removeItem("username")
+            localStorage.removeItem('userRole')
             return next('/login');
         }
         const isValid = await checkToken(token);
         if (!isValid) {
             localStorage.removeItem("token")
             localStorage.removeItem("username")
+            localStorage.removeItem('userRole')
+            ElMessage.error('身份信息已失效，请重新登录');
             // Token无效，重定向到登录页
             return next('/login');
         }
     }
+
     next();
 });
 

@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 
 interface ObjectList {
-    [key: string]: string[];
+    [userRole: string]: string[];
 }
 
 export const usePermissStore = defineStore('permiss', {
     state: () => {
         const defaultList: ObjectList = {
-            admin: [
+            ROOT: [
                 '0',
                 '1',
                 '11',
@@ -42,19 +42,46 @@ export const usePermissStore = defineStore('permiss', {
                 '64',
                 '65',
                 '66',
+                '101',
             ],
-            user: ['0', '1', '11', '12', '13'],
+            ADMIN: [],
+            HR: [],
+            FINANCE: [],
+            MANAGER: [],
+            EMPLOYEE: ['101'],
         };
         const username = localStorage.getItem('username');
         console.log(username);
+
+        function getPermissions(val: string) {
+            if (val == 'ROOT'){
+                return defaultList.ROOT
+            }
+            if (val == 'ADMIN'){
+                return defaultList.ADMIN
+            }
+            if (val == 'FINANCE'){
+                return defaultList.FINANCE
+            }
+            if (val == 'MANAGER'){
+                return defaultList.MANAGER
+            }
+            if (val == 'HR'){
+                return defaultList.HR
+            }
+            if (val == 'EMPLOYEE'){
+                return defaultList.EMPLOYEE
+            }
+        }
+
         return {
-            key: (username == 'admin' ? defaultList.admin : defaultList.user) as string[],
+            userRole: getPermissions(localStorage.getItem('userRole')) as string[],
             defaultList,
         };
     },
     actions: {
         handleSet(val: string[]) {
-            this.key = val;
+            this.userRole = val;
         },
     },
 });

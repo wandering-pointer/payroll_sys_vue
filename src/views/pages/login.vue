@@ -29,15 +29,18 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <div class="pwd-tips">
-                    <el-checkbox class="pwd-checkbox" v-model="checked" label="记住密码" />
-                    <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
-                </div>
+              <el-form-item label="用户角色" prop="selectedRole">
+                <el-select v-model="param.selectedRole" placeholder="请选择">
+                  <el-option key="ROOT" label="超级管理员" value="ROOT"></el-option>
+                  <el-option key="ADMIN" label="系统运维" value="ADMIN"></el-option>
+                  <el-option key="HR" label="人力资源管理员" value="HR"></el-option>
+                  <el-option key="MANAGER" label="部门经理" value="MANAGER"></el-option>
+                  <el-option key="FINANCE" label="财务管理员" value="FINANCE"></el-option>
+                  <el-option key="EMPLOYEE" label="普通员工" value="EMPLOYEE"></el-option>
+                </el-select>
+              </el-form-item>
                 <el-button class="login-btn" type="primary" size="large" @click="submitForm(login)">登录</el-button>
                 <p class="login-tips">Tips : 用户名和密码随便填。</p>
-                <p class="login-text">
-                    没有账号？<el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
-                </p>
             </el-form>
         </div>
     </div>
@@ -55,6 +58,7 @@ import axios from "axios";
 interface LoginInfo {
     username: string;
     password: string;
+    selectedRole: string;
 }
 
 const lgStr = localStorage.getItem('login-param');
@@ -65,6 +69,7 @@ const router = useRouter();
 const param = reactive<LoginInfo>({
     username: defParam ? defParam.username : '',
     password: defParam ? defParam.password : '',
+    selectedRole: defParam ? defParam.selectedRole : 'ROOT',
 });
 
 const rules: FormRules = {
@@ -95,16 +100,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
             ElMessage.success('登录成功:' + response.data.token);
             localStorage.setItem('username', param.username);
             localStorage.setItem('token', response.data.token) //后端给的令牌
-            const keys = permiss.defaultList[param.username == 'admin' ? 'admin' : 'user'];
+            localStorage.setItem('userRole', param.selectedRole)
+            //
+            const keys = permiss.defaultList[param.selectedRole];
             permiss.handleSet(keys);
             await router.push('/');
 
-            // 处理“记住我”
-            if (checked.value) {
-              localStorage.setItem('login-param', JSON.stringify(param));
-            } else {
-              localStorage.removeItem('login-param');
-            }
           } else {
             ElMessage.error(response.data.message || '登录失败');
           }
