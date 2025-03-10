@@ -53,7 +53,7 @@ import { usePermissStore } from '@/store/permiss';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import axios from "axios";
+import {tryLogin} from '@/api/index';
 
 interface LoginInfo {
     username: string;
@@ -90,10 +90,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
       if (valid) {
         try {
           // 发送登录请求到后端
-          const response = await axios.post('/tryLogin', {
-            username: param.username,
-            password: param.password
-          });
+          console.log(param)
+          const response = await tryLogin(param);
 
           // 处理响应
           if (response.data.success) {

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+axios.defaults.baseURL ='http://localhost:8080/api/'; //配置请求地址
 
 const service: AxiosInstance = axios.create({
     timeout: 5000

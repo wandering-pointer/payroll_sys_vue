@@ -5,7 +5,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import axios from "axios";
 import {ElMessage} from "element-plus";
-axios.defaults.baseURL ='http://localhost:8080/api/'; //配置请求地址
+import {checkToken} from "@/api/index";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -231,7 +231,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/dept-manage',
                 name: 'dept-manage',
                 meta: {
-                    title: '人事资源管理',
+                    title: '部门管理',
                     permiss: '101',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/department.vue'),
@@ -312,8 +312,8 @@ router.beforeEach(async (to, from, next) => {
             localStorage.removeItem('userRole')
             return next('/login');
         }
-        const isValid = await checkToken(token);
-        if (!isValid) {
+        const isValid = await checkToken({token: token})
+        if (!isValid.data.success) {
             localStorage.removeItem("token")
             localStorage.removeItem("username")
             localStorage.removeItem('userRole')
@@ -325,20 +325,6 @@ router.beforeEach(async (to, from, next) => {
 
     next();
 });
-
-async function checkToken(token) {
-    try {
-        const response = await axios.post('/checkToken', {token: token}, {
-            headers: {
-                token: token
-            }
-        });
-        return response.data.success;
-    } catch (error) {
-        console.error("Failed to check token:", error);
-        return false;
-    }
-}
 
 router.afterEach(() => {
     NProgress.done();
