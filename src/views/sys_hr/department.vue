@@ -2,9 +2,16 @@
 	<div>
 		<TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
 		<div class="container">
-			<TableCustom :columns="columns" :tableData="tableData" :total="page.total" :viewFunc="handleView"
-				:delFunc="handleDelete" :editFunc="handleEdit" :refresh="getData" :currentPage="page.index"
-				:changePage="changePage">
+			<TableCustom :columns="columns"
+                   :tableData="tableData"
+                   :total="page.total"
+                   :viewFunc="handleView"
+				           :delFunc="handleDelete"
+                   :editFunc="handleEdit"
+                   :refresh="getData"
+                   :currentPage="page.index"
+                   :changePage="changePage"
+      :page-size="page.size">
 				<template #toolbarBtn>
 					<el-button type="warning" :icon="CirclePlusFilled" @click="visible = true">新增</el-button>
 				</template>
@@ -16,9 +23,9 @@
 						preview-teleported>
 					</el-image>
 				</template>
-				<template #state="{ rows }">
-					<el-tag :type="rows.state ? 'success' : 'danger'">
-						{{ rows.state ? '正常' : '异常' }}
+				<template #disabled="{ rows }">
+					<el-tag :type="rows.disabled ? 'success' : 'danger'">
+						{{ rows.disabled ? '正 常' : '禁 用' }}
 					</el-tag>
 				</template>
 			</TableCustom>
@@ -34,9 +41,11 @@
 		</el-dialog>
 		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
 			<TableDetail :data="viewData">
-				<template #thumb="{ rows }">
-					<el-image :src="rows.thumb"></el-image>
-				</template>
+        <template #disabled="{ rows }">
+          <el-tag :type="disabled ? 'danger' : 'success'">
+            {{ disabled ? '禁 用' : '正 常' }}
+          </el-tag>
+        </template>
 			</TableDetail>
 		</el-dialog>
 	</div>
@@ -46,12 +55,13 @@
 import { ref, reactive } from 'vue';
 import { ElMessage, } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
-import { fetchData } from '@/api/index';
+import {fetchData, getDepartment} from '@/api/index';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { TableItem } from '@/types/table';
 import { FormOption, FormOptionList } from '@/types/form-option';
+import {getToken} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -68,7 +78,7 @@ const handleSearch = () => {
 let columns = ref([
 	{ prop: 'id', label: '部门编号' },
 	{ prop: 'name', label: '部门名称' },
-	{ prop: 'isDisabled', label: '是否活跃中' },
+	{ prop: 'disabled', label: '状态' },
 	{ prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -78,8 +88,14 @@ const page = reactive({
 })
 const tableData = ref<TableItem[]>([]);
 const getData = async () => {
-	const res = await fetchData()
+	const res = await getDepartment({
+    token: getToken(),
+    limit: page.size,
+    offset: (page.index - 1) * page.size,
+    deptName: '',
+  })
 	tableData.value = res.data.list;
+  page.total = res.data.total
 };
 getData();
 
@@ -93,10 +109,9 @@ let options = ref<FormOption>({
 	labelWidth: '100px',
 	span: 24,
 	list: [
-		{ type: 'input', label: '用户名', prop: 'name', required: true },
-		{ type: 'number', label: '账户余额', prop: 'money', required: true },
-		{ type: 'switch', activeText: '正常', inactiveText: '异常', label: '账户状态', prop: 'state', required: true },
-		{ type: 'upload', label: '头像', prop: 'thumb', required: true },
+		{ type: 'name', label: '部门编号', prop: 'id', required: true },
+		{ type: 'input', label: '部门名称', prop: 'name', required: true },
+		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'disabled', required: true },
 	]
 })
 const visible = ref(false);
@@ -126,26 +141,9 @@ const viewData = ref({
 const handleView = (row: TableItem) => {
 	viewData.value.row = { ...row }
 	viewData.value.list = [
-		{
-			prop: 'id',
-			label: '用户ID',
-		},
-		{
-			prop: 'name',
-			label: '用户名',
-		},
-		{
-			prop: 'money',
-			label: '账户余额',
-		},
-		{
-			prop: 'state',
-			label: '账户状态',
-		},
-		{
-			prop: 'thumb',
-			label: '头像',
-		},
+    { prop: 'id', label: '部门编号' },
+    { prop: 'name', label: '部门名称' },
+    { prop: 'disabled', label: '状态' },
 	]
 	visible1.value = true;
 };

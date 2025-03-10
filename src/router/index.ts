@@ -312,13 +312,20 @@ router.beforeEach(async (to, from, next) => {
             localStorage.removeItem('userRole')
             return next('/login');
         }
-        const isValid = await checkToken({token: token})
-        if (!isValid.data.success) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("username")
-            localStorage.removeItem('userRole')
-            ElMessage.error('身份信息已失效，请重新登录');
-            // Token无效，重定向到登录页
+        try{
+            const isValid = await checkToken({token: token})
+            if (!isValid.data.success) {
+                localStorage.removeItem("token")
+                localStorage.removeItem("username")
+                localStorage.removeItem('userRole')
+                ElMessage.error('身份信息已失效，请重新登录');
+                // Token无效，重定向到登录页
+                return next('/login');
+            }
+        }
+        catch (error){
+            ElMessage.error('请求失败，请检查网络');
+            console.error('Login error:', error);
             return next('/login');
         }
     }

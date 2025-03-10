@@ -39,9 +39,10 @@ export const checkToken = (data) => {
     });
 };
 
-export const getDepartment = () => {
+export const getDepartment = (data) => {
     return request({
-        url: '',
-        method: 'post'
+        url: '/listDepartment',
+        method: 'post',
+        data: data
     });
 };
