@@ -41,7 +41,23 @@ export const checkToken = (data) => {
 
 export const getDepartment = (data) => {
     return request({
-        url: '/listDepartment',
+        url: '/department/list',
+        method: 'post',
+        data: data
+    });
+};
+
+export const updateDepartment = (data) => {
+    return request({
+        url: '/department/update',
+        method: 'post',
+        data: data
+    });
+};
+
+export const insertDepartment = (data) => {
+    return request({
+        url: '/department/insert',
         method: 'post',
         data: data
     });

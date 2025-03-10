@@ -34,9 +34,6 @@
 		<el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
 			:close-on-click-modal="false" @close="closeDialog">
 			<TableEdit :form-data="rowData" :options="options" :edit="isEdit" :update="updateData">
-				<template #thumb="{ rows }">
-					<img class="table-td-thumb" :src="rows.thumb"></img>
-				</template>
 			</TableEdit>
 		</el-dialog>
 		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
@@ -55,13 +52,14 @@
 import { ref, reactive } from 'vue';
 import { ElMessage, } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
-import {fetchData, getDepartment} from '@/api/index';
+import {getDepartment} from '@/api/index';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { TableItem } from '@/types/table';
 import { FormOption, FormOptionList } from '@/types/form-option';
 import {getToken} from "@/utils/MyLittleUtils";
+import TableEdit from "@/components/table-edit.vue";
 
 // 查询相关
 const query = reactive({
@@ -92,7 +90,7 @@ const getData = async () => {
     token: getToken(),
     limit: page.size,
     offset: (page.index - 1) * page.size,
-    deptName: '',
+    department: {},
   })
 	tableData.value = res.data.list;
   page.total = res.data.total
@@ -109,7 +107,7 @@ let options = ref<FormOption>({
 	labelWidth: '100px',
 	span: 24,
 	list: [
-		{ type: 'name', label: '部门编号', prop: 'id', required: true },
+		{ type: 'name', label: '部门编号', prop: 'id'},
 		{ type: 'input', label: '部门名称', prop: 'name', required: true },
 		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'disabled', required: true },
 	]
@@ -122,8 +120,11 @@ const handleEdit = (row: TableItem) => {
 	isEdit.value = true;
 	visible.value = true;
 };
-const updateData = () => {
+const updateData = async () => {
 	closeDialog();
+
+
+
 	getData();
 };
 

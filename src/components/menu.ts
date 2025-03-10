@@ -223,7 +223,7 @@ export const menuData: Menus[] = [
 //
     {
         id: '101',
-        icon: 'DocumentAdd',
+        icon: 'Avatar',
         index: '7',
         title: '人事资源管理',
         children: [
