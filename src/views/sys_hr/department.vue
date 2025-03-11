@@ -15,17 +15,9 @@
 				<template #toolbarBtn>
 					<el-button type="warning" :icon="CirclePlusFilled" @click="visible = true">新增</el-button>
 				</template>
-				<template #money="{ rows }">
-					￥{{ rows.money }}
-				</template>
-				<template #thumb="{ rows }">
-					<el-image class="table-td-thumb" :src="rows.thumb" :z-index="10" :preview-src-list="[rows.thumb]"
-						preview-teleported>
-					</el-image>
-				</template>
-				<template #disabled="{ rows }">
-					<el-tag :type="rows.disabled ? 'success' : 'danger'">
-						{{ rows.disabled ? '正 常' : '禁 用' }}
+				<template #usable="{ rows }">
+					<el-tag :type="rows.usable ? 'success' : 'danger'">
+						{{ rows.usable ? '正 常' : '禁 用' }}
 					</el-tag>
 				</template>
 			</TableCustom>
@@ -38,9 +30,9 @@
 		</el-dialog>
 		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
 			<TableDetail :data="viewData">
-        <template #disabled="{ rows }">
-          <el-tag :type="disabled ? 'danger' : 'success'">
-            {{ disabled ? '禁 用' : '正 常' }}
+        <template #usable="{ rows }">
+          <el-tag :type="rows.usable ? 'success' : 'danger'">
+            {{ rows.usable ? '正 常' : '禁 用' }}
           </el-tag>
         </template>
 			</TableDetail>
@@ -76,7 +68,7 @@ const handleSearch = () => {
 let columns = ref([
 	{ prop: 'id', label: '部门编号' },
 	{ prop: 'name', label: '部门名称' },
-	{ prop: 'disabled', label: '状态' },
+	{ prop: 'usable', label: '状态' },
 	{ prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -107,9 +99,9 @@ let options = ref<FormOption>({
 	labelWidth: '100px',
 	span: 24,
 	list: [
-		{ type: 'name', label: '部门编号', prop: 'id'},
+		{ type: 'input', label: '部门编号', prop: 'id', usable: true, placeholder: '系统自动分配'},
 		{ type: 'input', label: '部门名称', prop: 'name', required: true },
-		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'disabled', required: true },
+		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'usable', required: true },
 	]
 })
 const visible = ref(false);
@@ -144,7 +136,7 @@ const handleView = (row: TableItem) => {
 	viewData.value.list = [
     { prop: 'id', label: '部门编号' },
     { prop: 'name', label: '部门名称' },
-    { prop: 'disabled', label: '状态' },
+    { prop: 'usable', label: '状态' },
 	]
 	visible1.value = true;
 };

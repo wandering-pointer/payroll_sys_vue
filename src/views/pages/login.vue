@@ -7,7 +7,7 @@
             </div>
             <el-form :model="param" :rules="rules" ref="login" size="large">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="用户名">
+                    <el-input v-model="param.empId" placeholder="用户名">
                         <template #prepend>
                             <el-icon>
                                 <User />
@@ -30,7 +30,7 @@
                     </el-input>
                 </el-form-item>
               <el-form-item label="用户角色" prop="selectedRole">
-                <el-select v-model="param.selectedRole" placeholder="请选择">
+                <el-select v-model="param.role" placeholder="请选择">
                   <el-option key="ROOT" label="超级管理员" value="ROOT"></el-option>
                   <el-option key="ADMIN" label="系统运维" value="ADMIN"></el-option>
                   <el-option key="HR" label="人力资源管理员" value="HR"></el-option>
@@ -56,9 +56,9 @@ import type { FormInstance, FormRules } from 'element-plus';
 import {tryLogin} from '@/api/index';
 
 interface LoginInfo {
-    username: string;
+    empId: string;
     password: string;
-    selectedRole: string;
+    role: string;
 }
 
 const lgStr = localStorage.getItem('login-param');
@@ -67,16 +67,16 @@ const checked = ref(lgStr ? true : false);
 
 const router = useRouter();
 const param = reactive<LoginInfo>({
-    username: defParam ? defParam.username : '',
+    empId: defParam ? defParam.empId : '',
     password: defParam ? defParam.password : '',
-    selectedRole: defParam ? defParam.selectedRole : 'ROOT',
+    role: defParam ? defParam.role : 'ROOT',
 });
 
 const rules: FormRules = {
-    username: [
+  empId: [
         {
             required: true,
-            message: '请输入用户名',
+            message: '请输入工号',
             trigger: 'blur',
         },
     ],
@@ -96,11 +96,11 @@ const submitForm = (formEl: FormInstance | undefined) => {
           // 处理响应
           if (response.data.success) {
             ElMessage.success('登录成功，令牌：' + response.data.token);
-            localStorage.setItem('username', param.username);
+            localStorage.setItem('username', param.empId);
             localStorage.setItem('token', response.data.token) //后端给的令牌
-            localStorage.setItem('userRole', param.selectedRole)
+            localStorage.setItem('userRole', param.role)
             //
-            const keys = permiss.defaultList[param.selectedRole];
+            const keys = permiss.defaultList[param.role];
             permiss.handleSet(keys);
             await router.push('/');
 
