@@ -44,14 +44,13 @@
 import { ref, reactive } from 'vue';
 import { ElMessage, } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
-import {getDepartment} from '@/api/index';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { TableItem } from '@/types/table';
 import { FormOption, FormOptionList } from '@/types/form-option';
-import {getToken} from "@/utils/MyLittleUtils";
 import TableEdit from "@/components/table-edit.vue";
+import {listDepartment} from "@/api/forDepartment";
 
 // 查询相关
 const query = reactive({
@@ -78,8 +77,7 @@ const page = reactive({
 })
 const tableData = ref<TableItem[]>([]);
 const getData = async () => {
-	const res = await getDepartment({
-    token: getToken(),
+	const res = await listDepartment({
     limit: page.size,
     offset: (page.index - 1) * page.size,
     department: {},
@@ -99,7 +97,7 @@ let options = ref<FormOption>({
 	labelWidth: '100px',
 	span: 24,
 	list: [
-		{ type: 'input', label: '部门编号', prop: 'id', usable: true, placeholder: '系统自动分配'},
+		{ type: 'input', label: '部门编号', prop: 'id', disabled: true, placeholder: '系统自动分配'},
 		{ type: 'input', label: '部门名称', prop: 'name', required: true },
 		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'usable', required: true },
 	]
