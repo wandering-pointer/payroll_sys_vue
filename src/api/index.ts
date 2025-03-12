@@ -1,5 +1,6 @@
 import request from '../utils/request';
 import axios from "axios";
+import {getToken} from "@/utils/MyLittleUtils";
 axios.defaults.baseURL ='http://localhost:8080/api/'; //配置请求地址
 
 export const fetchData = () => {
@@ -36,5 +37,13 @@ export const checkToken = (data) => {
         url: '/checkToken',
         method: 'post',
         data: data,
+    });
+};
+
+export const logout = () => {
+    return request({
+        url: '/logout',
+        method: 'post',
+        data: {token: getToken()},
     });
 };

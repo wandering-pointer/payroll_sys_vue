@@ -54,7 +54,7 @@
                                 <el-dropdown-item>官方文档</el-dropdown-item>
                             </a>
                             <el-dropdown-item command="user">个人中心</el-dropdown-item>
-                            <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+                            <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -67,6 +67,8 @@ import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
 import imgurl from '../assets/img/img.jpg';
+import {logout} from "@/api";
+import {ElMessage} from "element-plus";
 
 const username: string | null = localStorage.getItem('vuems_name');
 const message: number = 2;
@@ -85,14 +87,23 @@ onMounted(() => {
 
 // 用户名下拉菜单选择事件
 const router = useRouter();
-const handleCommand = (command: string) => {
-    if (command == 'loginout') {
+const handleCommand = async (command: string) => {
+  if (command == 'logout') {
+
+    let res = await logout();
+    if (res.data.success) {
+      router.push('/login');
+      ElMessage.success("登出成功")
       localStorage.removeItem('username');
       localStorage.removeItem('token');
-      router.push('/login');
-    } else if (command == 'user') {
-      router.push('/ucenter');
     }
+    else{
+      ElMessage.error("登出失败")
+    }
+
+  } else if (command == 'user') {
+    router.push('/ucenter');
+  }
 };
 
 const setFullScreen = () => {
