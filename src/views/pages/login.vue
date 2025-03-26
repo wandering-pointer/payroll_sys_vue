@@ -53,7 +53,7 @@ import { usePermissStore } from '@/store/permiss';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import {tryLogin} from '@/api/index';
+import {tryLogin} from '@/api/forLogin';
 
 interface LoginInfo {
     empId: string;

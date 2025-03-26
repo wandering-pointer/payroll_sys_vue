@@ -67,7 +67,7 @@ import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
 import imgurl from '../assets/img/img.jpg';
-import {logout} from "@/api";
+import {logout} from "@/api/forLogin";
 import {ElMessage} from "element-plus";
 
 const username: string | null = localStorage.getItem('vuems_name');
