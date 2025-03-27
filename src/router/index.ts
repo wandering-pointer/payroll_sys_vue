@@ -337,4 +337,8 @@ router.afterEach(() => {
     NProgress.done();
 });
 
+export function reDirect(path: string){
+    router.push(path)
+}
+
 export default router;

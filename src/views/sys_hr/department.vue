@@ -56,6 +56,7 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteDepartment, insertDepartment, listDepartment, updateDepartment} from "@/api/forDepartment";
 import {Department} from "@/types/Department";
+import {showMessage} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -71,9 +72,7 @@ const handleSearch = async () => {
     offset: (page.index - 1) * page.size,
     department: query,
   })
-  if(res.data.code != 0){
-    ElMessage.error(res.data.message)
-  }
+  showMessage(res)
   tableData.value = res.data.list;
   page.total = res.data.total
   page.index = 1;
@@ -100,6 +99,7 @@ const getData = async () => {
   })
 	tableData.value = res.data.list;
   page.total = res.data.total
+  return res
 };
 getData();
 
@@ -132,24 +132,14 @@ const handleEdit = (row: Department) => {
 const editData = async (form: Department) => {
 	closeEditDialog()
   let res = await updateDepartment({department: form})
-    if (res.data.code == 0){
-      ElMessage.success(res.data.message)
-    }
-    else{
-      ElMessage.error(res.data.message)
-    }
+  showMessage(res)
 	getData();
 };
 
 const insertData = async (form: Department) => {
   closeAddDialog()
   let res = await insertDepartment({department: form})
-  if (res.data.code == 0){
-    ElMessage.success(res.data.message)
-  }
-  else{
-    ElMessage.error(res.data.message)
-  }
+  showMessage(res)
   getData();
 };
 
@@ -181,12 +171,7 @@ const handleView = (row: Department) => {
 const handleDelete = async (row: Department) => {
   const res = await deleteDepartment({department: row})
   console.log(res)
-  if (res.data.code == 0) {
-    ElMessage.success(res.data.message)
-  }
-  else{
-    ElMessage.error(res.data.message)
-  }
+  showMessage(res)
   page.index = 1
   getData()
 }
