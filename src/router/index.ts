@@ -314,7 +314,7 @@ router.beforeEach(async (to, from, next) => {
         }
         try{
             const isValid = await checkToken({token: token})
-            if (!isValid.data.success) {
+            if (!isValid.data.data.isValid) {
                 localStorage.removeItem("token")
                 localStorage.removeItem("username")
                 localStorage.removeItem('userRole')

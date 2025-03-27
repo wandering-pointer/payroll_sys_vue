@@ -73,8 +73,8 @@ const handleSearch = async () => {
     department: query,
   })
   showMessage(res)
-  tableData.value = res.data.list;
-  page.total = res.data.total
+  tableData.value = res.data.data.list;
+  page.total = res.data.data.total
   page.index = 1;
 };
 
@@ -97,8 +97,8 @@ const getData = async () => {
     offset: (page.index - 1) * page.size,
     department: {},
   })
-	tableData.value = res.data.list;
-  page.total = res.data.total
+	tableData.value = res.data.data.list;
+  page.total = res.data.data.total
   return res
 };
 getData();

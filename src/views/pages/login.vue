@@ -94,10 +94,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
           const response = await tryLogin(param);
 
           // 处理响应
-          if (response.data.success) {
-            ElMessage.success('登录成功，令牌：' + response.data.token);
+          if (response.data.data.token) {
+            ElMessage.success('登录成功，令牌：' + response.data.data.token);
             localStorage.setItem('username', param.empId);
-            localStorage.setItem('token', response.data.token) //后端给的令牌
+            localStorage.setItem('token', response.data.data.token) //后端给的令牌
             localStorage.setItem('userRole', param.role)
             //
             const keys = permiss.defaultList[param.role];
@@ -105,7 +105,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             await router.push('/');
 
           } else {
-            ElMessage.error(response.data.message || '登录失败');
+            ElMessage.error(response.data.data.message || '登录失败');
           }
         } catch (error) {
           ElMessage.error('请求失败，请检查网络');
