@@ -5,7 +5,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import {checkToken} from "@/api/forLogin";
+import {checkToken} from "@/api/forIdentify";
 
 const routes: RouteRecordRaw[] = [
     {

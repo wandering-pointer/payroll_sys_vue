@@ -46,7 +46,7 @@
 import { ref, reactive } from 'vue';
 import { ElMessage, } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
-import { fetchData } from '@/api/forLogin';
+import { fetchData } from '@/api/example';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
