@@ -302,34 +302,18 @@ router.beforeEach(async (to, from, next) => {
 
     const publicPages = ['/login']; // 不需要验证的页面
     const authRequired = !publicPages.includes(to.path);
-    const token = localStorage.getItem('token');
 
-    if (authRequired && token != "") {
-        // 如果页面需要验证且存在token，则检查token的有效性
-        if (token == null) {
-            // Token无效，重定向到登录页
-            localStorage.removeItem("username")
-            localStorage.removeItem('userRole')
-            return next('/login');
-        }
+    if (authRequired) {
+        // 检查登录状态
         try{
-            const isValid = await checkToken()
-            if (!isValid.isValid) {
-                localStorage.removeItem("token")
-                localStorage.removeItem("username")
-                localStorage.removeItem('userRole')
-                ElMessage.error('身份信息已失效，请重新登录');
-                // Token无效，重定向到登录页
-                return next('/login');
-            }
+            await checkToken()
         }
         catch (error){
             ElMessage.error('请求失败，请检查网络');
-            console.error('Login error:', error);
+            console.error('检查登录状态 error:', error);
             return next('/login');
         }
     }
-
     next();
 });
 

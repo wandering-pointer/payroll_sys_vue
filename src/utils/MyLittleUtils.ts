@@ -12,7 +12,7 @@ export function showMessage(res){
             ElMessage.error('服务器错误：' + res.message)
             break
         case -2:
-            ElMessage.error('身份已失效，请重新登录')
+            ElMessage.error('身份信息已失效，请重新登录')
             reDirect('/login')
             break
         default:
