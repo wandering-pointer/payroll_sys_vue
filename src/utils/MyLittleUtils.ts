@@ -2,18 +2,20 @@ import {ElMessage} from "element-plus";
 import {reDirect} from "@/router";
 
 export function showMessage(res){
-    switch (res.data.code){
+    switch (res.code){
         case 0:
-            ElMessage.success(res.data.message)
+            if(res.message.length > 0){
+                ElMessage.success(res.message)
+            }
             break
         case -1:
-            ElMessage.error('服务器未知错误：' + res.data.message)
+            ElMessage.error('服务器错误：' + res.message)
             break
         case -2:
-            ElMessage.error('登录认证已失效，请重新登录')
+            ElMessage.error('身份已失效，请重新登录')
             reDirect('/login')
             break
         default:
-            ElMessage.error('未知错误：' + res.data.message)
+            ElMessage.error('未知错误：' + res.message)
     }
 }

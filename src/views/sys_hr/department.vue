@@ -47,7 +47,6 @@
 
 <script setup lang="ts" name="basetable">
 import { ref, reactive } from 'vue';
-import { ElMessage, } from 'element-plus';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
@@ -67,14 +66,13 @@ const searchOpt = ref<FormOptionList[]>([
   { type: 'input', label: '部门编号：', prop: 'id' },
 ])
 const handleSearch = async () => {
-  const res = await listDepartment({
-    limit: page.size,
-    offset: (page.index - 1) * page.size,
+  const data = await listDepartment({
+    pageSize: page.size,
+    pageNum: 1,
     department: query,
   })
-  showMessage(res)
-  tableData.value = res.data.data.list;
-  page.total = res.data.data.total
+  tableData.value = data.list;
+  page.total = data.total
   page.index = 1;
 };
 
@@ -92,14 +90,14 @@ const page = reactive({
 })
 const tableData = ref<Department[]>([]);
 const getData = async () => {
-	const res = await listDepartment({
-    limit: page.size,
-    offset: (page.index - 1) * page.size,
+	const data = await listDepartment({
+    pageSize: page.size,
+    pageNum: page.index,
     department: {},
   })
-	tableData.value = res.data.data.list;
-  page.total = res.data.data.total
-  return res
+	tableData.value = data.list;
+  page.total = data.total
+  return data
 };
 getData();
 
@@ -131,15 +129,13 @@ const handleEdit = (row: Department) => {
 };
 const editData = async (form: Department) => {
 	closeEditDialog()
-  let res = await updateDepartment({department: form})
-  showMessage(res)
+  let data = await updateDepartment({department: form})
 	getData();
 };
 
 const insertData = async (form: Department) => {
   closeAddDialog()
-  let res = await insertDepartment({department: form})
-  showMessage(res)
+  let data = await insertDepartment({department: form})
   getData();
 };
 
@@ -169,9 +165,7 @@ const handleView = (row: Department) => {
 
 // 删除相关
 const handleDelete = async (row: Department) => {
-  const res = await deleteDepartment({department: row})
-  console.log(res)
-  showMessage(res)
+  const data = await deleteDepartment({department: row})
   page.index = 1
   getData()
 }

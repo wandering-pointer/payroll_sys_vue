@@ -70,7 +70,7 @@ import imgurl from '../assets/img/img.jpg';
 import {logout} from "@/api/forLogin";
 import {ElMessage} from "element-plus";
 
-const username: string | null = localStorage.getItem('vuems_name');
+const username: string | null = localStorage.getItem('username');
 const message: number = 2;
 
 const sidebar = useSidebarStore();
@@ -90,15 +90,23 @@ const router = useRouter();
 const handleCommand = async (command: string) => {
   if (command == 'logout') {
 
-    let res = await logout();
-    if (res.data.success) {
-      router.push('/login');
-      ElMessage.success("登出成功")
-      localStorage.removeItem('username');
-      localStorage.removeItem('token');
+    try{
+      let res = await logout();
+      if (res.success) {
+        router.push('/login');
+        ElMessage.success("登出成功")
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+      }
+      else{
+        ElMessage.error("请求失败，页面已跳转")
+        router.push('/login');
+      }
     }
-    else{
-      ElMessage.error("登出失败")
+    catch(err){
+      console.log(err);
+      ElMessage.error("请求失败，页面已跳转")
+      router.push('/login');
     }
 
   } else if (command == 'user') {

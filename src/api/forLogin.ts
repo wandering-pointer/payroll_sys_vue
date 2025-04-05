@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import {request} from '../utils/request';
 
 export const tryLogin = (data) => {
     return request({
@@ -8,11 +8,11 @@ export const tryLogin = (data) => {
     });
 };
 
-export const checkToken = (data) => {
+export const checkToken = () => {
     return request({
         url: '/public/checkToken',
         method: 'post',
-        data: data,
+        data: {},
     });
 };
 

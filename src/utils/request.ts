@@ -1,10 +1,18 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, {AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestConfig} from 'axios';
+import {showMessage} from "@/utils/MyLittleUtils";
 
-// 创建自定义实例
-const instance = axios.create({
+// 自定义类型，剥离 AxiosResponse 包装
+interface CustomAxiosInstance extends AxiosInstance {
+    request<T = any>(config: AxiosRequestConfig): Promise<T>;
+    get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+    post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    // 可根据需要添加其他方法（delete、put 等）
+}
+
+const instance: CustomAxiosInstance = axios.create({
     baseURL: 'http://localhost:8080/api/',
     timeout: 5000,
-});
+}) as CustomAxiosInstance; // 类型断言
 
 instance.interceptors.request.use(
     (config) => {
@@ -26,7 +34,8 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     (response: AxiosResponse) => {
         if (response.status === 200) {
-            return response;
+            showMessage(response.data);
+            return response.data.data; //剥离最外层包装和业务状态，只返回业务数据
         } else {
             Promise.reject();
         }
@@ -37,4 +46,6 @@ instance.interceptors.response.use(
     }
 );
 
-export default instance;
+export function request(config: AxiosRequestConfig) {
+    return instance.request(config);
+}
