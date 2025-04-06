@@ -297,7 +297,7 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
     NProgress.start();
 
     const publicPages = ['/login']; // 不需要验证的页面
@@ -306,7 +306,7 @@ router.beforeEach(async (to, from, next) => {
     if (authRequired) {
         // 检查登录状态
         try{
-            await checkToken()
+            checkToken()
         }
         catch (error){
             ElMessage.error('请求失败，请检查网络');

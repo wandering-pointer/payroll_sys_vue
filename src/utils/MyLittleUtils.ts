@@ -9,13 +9,13 @@ export function showMessage(res){
             }
             break
         case -1:
-            ElMessage.error('服务器错误：' + res.message)
-            break
-        case -2:
             ElMessage.error('身份信息已失效，请重新登录')
             reDirect('/login')
             break
+        case -2:
+            ElMessage.error(res.message)
+            break
         default:
-            ElMessage.error('未知错误：' + res.message)
+            ElMessage.error('错误：' + res.message)
     }
 }
