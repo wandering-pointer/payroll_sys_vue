@@ -67,8 +67,8 @@ const searchOpt = ref<FormOptionList[]>([
 ])
 const handleSearch = async () => {
   const data = await listDepartment({
-    pageSize: page.size,
-    pageNum: 1,
+    size: page.size,
+    index: 1,
     department: query,
   })
   tableData.value = data.list;
@@ -91,8 +91,8 @@ const page = reactive({
 const tableData = ref<Department[]>([]);
 const getData = async () => {
 	const data = await listDepartment({
-    pageSize: page.size,
-    pageNum: page.index,
+    size: page.size,
+    index: page.index,
     department: {},
   })
 	tableData.value = data.list;
