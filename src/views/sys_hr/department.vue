@@ -129,7 +129,7 @@ const handleEdit = (row: Department) => {
 };
 const editData = async (form: Department) => {
 	closeEditDialog()
-  let data = await updateDepartment({department: form})
+  let data = await updateDepartment(form)
 	getData();
 };
 
