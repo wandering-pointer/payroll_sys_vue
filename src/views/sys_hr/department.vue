@@ -135,7 +135,7 @@ const editData = async (form: Department) => {
 
 const insertData = async (form: Department) => {
   closeAddDialog()
-  let data = await insertDepartment({department: form})
+  let data = await insertDepartment(form)
   getData();
 };
 
@@ -165,7 +165,7 @@ const handleView = (row: Department) => {
 
 // 删除相关
 const handleDelete = async (row: Department) => {
-  const data = await deleteDepartment({department: row})
+  const data = await deleteDepartment({id: row.id})
   page.index = 1
   getData()
 }
