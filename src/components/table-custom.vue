@@ -116,7 +116,7 @@ const props = defineProps({
 
     layout: {
         type: String,
-        default: 'total, prev, pager, next'
+        default: 'total, prev, pager, next, jumper'
     },
     delFunc: {
         type: Function,

@@ -11,7 +11,7 @@
                    :refresh="getData"
                    :currentPage="page.index"
                    :changePage="changePage"
-      :page-size="page.size">
+                   :page-size="page.size">
 				<template #toolbarBtn>
 					<el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增</el-button>
 				</template>
@@ -55,7 +55,6 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteDepartment, insertDepartment, listDepartment, updateDepartment} from "@/api/forDepartment";
 import {Department} from "@/types/Department";
-import {showMessage} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -129,13 +128,13 @@ const handleEdit = (row: Department) => {
 };
 const editData = async (form: Department) => {
 	closeEditDialog()
-  let data = await updateDepartment(form)
+  await updateDepartment(form)
 	getData();
 };
 
 const insertData = async (form: Department) => {
   closeAddDialog()
-  let data = await insertDepartment(form)
+  await insertDepartment(form)
   getData();
 };
 

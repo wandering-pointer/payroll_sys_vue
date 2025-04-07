@@ -10,7 +10,6 @@ export async function showMessage(res) {
             break
         case -1:
             ElMessage.error('身份信息已失效，请重新登录')
-            console.log(res.message)
             await reDirect('/login')
             break
         case -2:
