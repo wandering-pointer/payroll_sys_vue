@@ -11,7 +11,7 @@ export const menuData: Menus[] = [
 //========================================= 以下是我自己的 =============================================
 //
     {
-        id: '101',
+        id: '101', // 自己的页面从101开始，避免编号冲突
         icon: 'Avatar',
         index: '7',
         title: '人事资源管理',
@@ -21,6 +21,12 @@ export const menuData: Menus[] = [
                 pid: '6',
                 index: '/dept-manage',
                 title: '部门管理',
+            },
+            {
+                id: '101-2',
+                pid: '6',
+                index: '/job-manage',
+                title: '工种管理',
             },
         ],
     },

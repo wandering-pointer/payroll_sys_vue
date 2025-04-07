@@ -31,3 +31,12 @@ export const deleteDepartment = (data) => {
         data: data
     });
 };
+
+//所有部门名称 [{name, id}]
+export const getDepartmentSelectionView = (usable: Boolean) => {
+    return request({
+        url: '/department/selection-view',
+        method: 'get',
+        params: {usable: usable}
+    });
+};

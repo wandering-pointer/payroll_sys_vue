@@ -236,11 +236,20 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/department.vue'),
             },
-        ],
-    },
+            {
+                path: '/job-manage',
+                name: 'job-manage',
+                meta: {
+                    title: '工种管理',
+                    permiss: '101',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/job.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //
+        ],
+    },
     {
         path: '/login',
         meta: {

@@ -6,7 +6,7 @@
 				<el-input v-if="item.type === 'input'" v-model="query[item.prop]" :disabled="item.disabled"
 					:placeholder="item.placeholder" clearable></el-input>
 				<el-select v-else-if="item.type === 'select'" v-model="query[item.prop]" :disabled="item.disabled"
-					:placeholder="item.placeholder" clearable>
+					:placeholder="item.placeholder" :style="item.style" clearable>
 					<el-option v-for="opt in item.opts" :label="opt.label" :value="opt.value"></el-option>
 				</el-select>
 				<el-date-picker v-else-if="item.type === 'date'" type="date" v-model="query[item.prop]"

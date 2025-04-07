@@ -41,6 +41,11 @@
                 <el-table-column v-if="item.visible" :prop="item.prop" :label="item.label" :width="item.width"
                     :type="item.type" :align="item.align || 'center'">
 
+                    <!--      用于映射value和label        -->
+                    <template #default="{row, column}" v-if="item.type === 'selection-view'">
+                      {{formatSelectionView(item.selectionView, row[column.property])}}
+                    </template>
+
                     <template #default="{ row, column, $index }" v-if="item.type === 'index'">
                         {{ getIndex($index) }}
                     </template>
@@ -77,6 +82,7 @@
 import { toRefs, PropType, ref } from 'vue'
 import { Delete, Edit, View, Refresh } from '@element-plus/icons-vue';
 import { ElMessageBox } from 'element-plus';
+import {formatSelectionView} from "../types/SelectionView";
 
 const props = defineProps({
     // 表格相关
