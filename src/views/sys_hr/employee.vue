@@ -71,9 +71,6 @@ const jobSV_deptId = computed(() => s_jobSV_deptId.value);
 const s_jobSV_title = ref<SelectionView[]>([]);
 const jobSV_title = computed(() => s_jobSV_title.value);
 
-const s_jobSV_level = ref<SelectionView[]>([]);
-const jobSV_level = computed(() => s_jobSV_level.value);
-
 const s_jobSV_salary = ref<SelectionView[]>([]);
 const jobSV_salary = computed(() => s_jobSV_salary.value);
 
@@ -117,8 +114,8 @@ let columns = ref([
   { prop: 'hireDate', label: '入职日期' },
   { prop: 'jobId', label: '所属部门', selectionView: jobSV_deptName, type: 'selection-view' },
   { prop: 'jobId', label: '工种', selectionView: jobSV_title, type: 'selection-view' },
-  { prop: 'jobId', label: '等级', selectionView: jobSV_level, type: 'selection-view' },
   { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view' },
+  { prop: 'level', label: '等级' },
   { prop: 'working', label: '状态' },
   { prop: 'operator', label: '操作', width: 250 },
 ])
@@ -132,7 +129,6 @@ const getData = async () => {
   s_departmentSV.value = await getDepartmentSelectionView(null);
   s_jobSV_deptId.value = await getJobSelectionView('deptId');
   s_jobSV_title.value = await getJobSelectionView('title');
-  s_jobSV_level.value = await getJobSelectionView('level');
   s_jobSV_salary.value = await getJobSelectionView('salary');
   s_jobSV_deptName.value = labelToValueLabel(s_departmentSV.value, s_jobSV_deptId.value)
   const data = await listEmployee({
@@ -162,7 +158,7 @@ let options = ref<FormOption>({
     { prop: 'hireDate', label: '入职日期', type: 'input', disabled: true },
     { prop: 'jobId', label: '所属部门', type: 'select', opts: departmentSV, change: test},
     { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title },
-    { prop: 'jobId', label: '等级', type: 'select', opts: jobSV_level },
+    { prop: 'level', label: '等级', type: 'select', opts: [{value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
     { prop: 'working', label: '状态' , type: 'switch', activeText: '在职', inactiveText: '离职'},
   ]
 })
@@ -175,7 +171,6 @@ const addRowData = {
 const handleEdit = async (row: Employee) => {
   s_departmentSV.value = await getDepartmentSelectionView(true);
   s_jobSV_title.value = await getJobSelectionView('title');
-  s_jobSV_level.value = await getJobSelectionView('level');
   editRowData.value = {...row};
   EditVisible.value = true;
 };
