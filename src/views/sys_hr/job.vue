@@ -71,7 +71,7 @@ const searchOpt = ref<FormOptionList[]>([
   { prop: 'jobId', label: '工种编号', type: 'input' },
   { prop: 'title', label: '工种名称', type: 'input' },
   { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentOptions, style: 'width: 150px' },
-  { prop: 'level', label: '等级', type: 'input' },
+  { prop: 'level', label: '等级', type: 'select', opts: [{value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}], style: 'width: 100px' },
   { prop: 'salary', label: '基本工资', type: 'input' },
   { prop: 'usable', label: '状态', type: 'select', style: 'width: 100px', opts: [
       { label: '正常', value: true },
@@ -133,7 +133,7 @@ let options = ref<FormOption>({
     { prop: 'jobId', label: '工种编号' , type: 'input', disabled: true, placeholder: '系统自动分配'},
     { prop: 'title', label: '工种名称', type: 'input'},
     { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentOptions },
-    { prop: 'level', label: '等级', type: 'input' },
+    { prop: 'level', label: '等级', type: 'select', opts: [{value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
     { prop: 'salary', label: '基本工资', type: 'input' },
     { prop: 'usable', label: '状态', type: 'switch', activeText: '正常', inactiveText: '禁用'},
   ]
