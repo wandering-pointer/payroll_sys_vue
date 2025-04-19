@@ -56,8 +56,9 @@ import TableEdit from "@/components/table-edit.vue";
 import {deleteEmployee, insertEmployee, listEmployee, updateEmployee} from "@/api/forEmployee";
 import {Employee} from "@/types/Employee";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
-import {SelectionView} from "@/types/SelectionView";
+import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
+import {List} from "echarts";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -75,6 +76,9 @@ const jobSV_level = computed(() => s_jobSV_level.value);
 
 const s_jobSV_salary = ref<SelectionView[]>([]);
 const jobSV_salary = computed(() => s_jobSV_salary.value);
+
+const s_jobSV_deptName = ref<SelectionView[]>([]);
+const jobSV_deptName = computed(() => s_jobSV_deptName.value);
 
 
 // 查询相关
@@ -111,7 +115,7 @@ let columns = ref([
   { prop: 'name', label: '姓名' },
   { prop: 'phoneNum', label: '电话' },
   { prop: 'hireDate', label: '入职日期' },
-  { prop: 'jobId', label: '所属部门', selectionView: jobSV_deptId, type: 'selection-view' },
+  { prop: 'jobId', label: '所属部门', selectionView: jobSV_deptName, type: 'selection-view' },
   { prop: 'jobId', label: '工种', selectionView: jobSV_title, type: 'selection-view' },
   { prop: 'jobId', label: '等级', selectionView: jobSV_level, type: 'selection-view' },
   { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view' },
@@ -130,6 +134,7 @@ const getData = async () => {
   s_jobSV_title.value = await getJobSelectionView('title');
   s_jobSV_level.value = await getJobSelectionView('level');
   s_jobSV_salary.value = await getJobSelectionView('salary');
+  s_jobSV_deptName.value = labelToValueLabel(s_departmentSV.value, s_jobSV_deptId.value)
   const data = await listEmployee({
     size: page.size,
     index: page.index,
