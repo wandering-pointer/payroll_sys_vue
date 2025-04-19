@@ -31,3 +31,12 @@ export const deleteJob = (data) => {
         data: data
     });
 };
+
+//所有工种prop
+export const getJobSelectionView = (prop: string, usable: Boolean) => {
+    return request({
+        url: `/job/selection-view/${prop}`,
+        method: 'get',
+        params: {usable: usable}
+    });
+};

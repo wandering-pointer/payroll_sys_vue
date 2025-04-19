@@ -28,6 +28,12 @@ export const menuData: Menus[] = [
                 index: '/job-manage',
                 title: '工种管理',
             },
+            {
+                id: '101-3',
+                pid: '6',
+                index: '/employee-manage',
+                title: '员工管理',
+            },
         ],
     },
 //

@@ -245,6 +245,15 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/job.vue'),
             },
+            {
+                path: '/employee-manage',
+                name: 'employee-manage',
+                meta: {
+                    title: '员工管理',
+                    permiss: '101',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/employee.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //

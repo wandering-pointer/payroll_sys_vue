@@ -1,6 +1,7 @@
 export interface SelectionView {
     label: string;
     value: number;
+    parent: Number;
 }
 
 // 映射函数
