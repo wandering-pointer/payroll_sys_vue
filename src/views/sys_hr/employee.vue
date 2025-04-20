@@ -222,12 +222,15 @@ const viewData = ref({
 const handleView = (row: Employee) => {
   viewData.value.row = { ...row }
   viewData.value.list = [
-    { prop: 'jobId', label: '工种编号' },
-    { prop: 'title', label: '工种名称' },
-    { prop: 'deptId', label: '所属部门',isSelectionView: true, selectionView: s_departmentSV, type: 'selection-view' },
+    { prop: 'id', label: '工号' },
+    { prop: 'name', label: '姓名' },
+    { prop: 'phoneNum', label: '电话' },
+    { prop: 'hireDate', label: '入职日期' },
+    { prop: 'jobId', label: '所属部门', selectionView: jobSV_deptName, type: 'selection-view', isSelectionView: true },
+    { prop: 'jobId', label: '工种', selectionView: jobSV_title, type: 'selection-view', isSelectionView: true },
+    { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view', isSelectionView: true },
     { prop: 'level', label: '等级' },
-    { prop: 'salary', label: '基本工资' },
-    { prop: 'usable', label: '状态' },
+    { prop: 'working', label: '状态' },
   ]
   visible1.value = true;
 };
