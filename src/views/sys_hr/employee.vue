@@ -85,14 +85,13 @@ const query = reactive({
   name: '',
 });
 const searchOpt = ref<FormOptionList[]>([
-  { prop: 'jobId', label: '工种编号', type: 'input' },
-  { prop: 'title', label: '工种名称', type: 'input' },
+  { prop: 'id', label: '工号', type: 'input', placeholder: '需完全匹配' },
+  { prop: 'name', label: '姓名', type: 'input', placeholder: '模糊搜索' },
   { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, style: 'width: 150px' },
-  { prop: 'level', label: '等级', type: 'input' },
-  { prop: 'salary', label: '基本工资', type: 'input' },
-  { prop: 'usable', label: '状态', type: 'select', style: 'width: 100px', opts: [
-      { label: '正常', value: true },
-      { label: '禁用', value: false }
+  { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}], style: 'width: 100px' },
+  { prop: 'working', label: '状态', type: 'select', style: 'width: 100px', opts: [
+      { label: '在职', value: true },
+      { label: '离职', value: false }
     ]
   },
 ])
@@ -102,7 +101,8 @@ const handleSearch = async () => {
     size: page.size,
     index: 1,
     employee: query,
-  })
+  },
+  query.deptId)
   tableData.value = data.list;
   page.total = data.total
   page.index = 1;

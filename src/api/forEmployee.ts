@@ -1,10 +1,11 @@
 import {request} from '@/utils/request';
 
-export const listEmployee = (data) => {
+export const listEmployee = (data, deptId) => {
     return request({
         url: '/employee/list',
         method: 'post',
-        data: data
+        data: data,
+        params: {deptId: deptId}
     });
 };
 
