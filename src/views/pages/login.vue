@@ -101,7 +101,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             //
             const keys = permiss.defaultList[param.role];
             permiss.handleSet(keys);
-            await router.push('/');
+            await router.push('/dept-manage');
 
           }
         } catch (error) {
