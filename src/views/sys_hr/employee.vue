@@ -58,7 +58,6 @@ import {Employee} from "@/types/Employee";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
 import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
-import {List} from "echarts";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -76,6 +75,9 @@ const jobSV_salary = computed(() => s_jobSV_salary.value);
 
 const s_jobSV_deptName = ref<SelectionView[]>([]);
 const jobSV_deptName = computed(() => s_jobSV_deptName.value);
+
+const s_jobSV_title_select = ref<SelectionView[]>([]);
+const jobSV_title_select = computed(() => s_jobSV_title_select.value);
 
 
 // 查询相关
@@ -156,9 +158,9 @@ let options = ref<FormOption>({
     { prop: 'name', label: '姓名', type: 'input' },
     { prop: 'phoneNum', label: '电话', type: 'input' },
     { prop: 'hireDate', label: '入职日期', type: 'input', disabled: true },
-    { prop: 'jobId', label: '所属部门', type: 'select', opts: departmentSV, change: test},
-    { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title },
-    { prop: 'level', label: '等级', type: 'select', opts: [{value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
+    { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, change: handleDepartmentSelected},
+    { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title_select },
+    { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
     { prop: 'working', label: '状态' , type: 'switch', activeText: '在职', inactiveText: '离职'},
   ]
 })
@@ -171,7 +173,12 @@ const addRowData = {
 const handleEdit = async (row: Employee) => {
   s_departmentSV.value = await getDepartmentSelectionView(true);
   s_jobSV_title.value = await getJobSelectionView('title');
-  editRowData.value = {...row};
+
+  const deptId = Number(jobSV_deptId.value.filter(item => item.value === row.jobId)[0].label);
+  const deptData = {deptId: deptId}; // 把部门名称绑定到显示上
+  handleDepartmentSelected(deptId);
+
+  editRowData.value = {...row, ...deptData};
   EditVisible.value = true;
 };
 const editData = async (form: Employee) => {
@@ -193,6 +200,12 @@ const closeEditDialog = () => {
 const closeAddDialog = () => {
   AddVisible.value = false;
 };
+
+// 筛选所选部门的工种
+function handleDepartmentSelected(value: number) {
+  editRowData.value.jobId = undefined;
+  s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
+}
 
 // 查看详情弹窗相关
 const visible1 = ref(false);
@@ -217,11 +230,6 @@ const handleView = (row: Employee) => {
 const handleDelete = async (row: Employee) => {
   await deleteEmployee({id: row.id})
   getData()
-}
-
-function test(data) {
-  console.log('test')
-  console.log(data)
 }
 </script>
 
