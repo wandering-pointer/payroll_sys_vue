@@ -25,7 +25,7 @@
     </div>
     <el-dialog :title="'编辑'" v-model="EditVisible" width="700px" destroy-on-close
                :close-on-click-modal="false" @close="closeEditDialog">
-      <TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData">
+      <TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData" :is-ref=true>
       </TableEdit>
     </el-dialog>
     <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close
@@ -203,7 +203,7 @@ const closeAddDialog = () => {
 
 // 筛选所选部门的工种
 function handleDepartmentSelected(value: number) {
-  editRowData.value.jobId = undefined;
+  editRowData.value.jobId = null;
   s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
 }
 

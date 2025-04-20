@@ -42,7 +42,7 @@ import { FormOption } from '@/types/form-option';
 import { FormInstance, FormRules, UploadProps } from 'element-plus';
 import { PropType, ref } from 'vue';
 
-const { options, formData, edit, update } = defineProps({
+const { options, formData, edit, update, isRef } = defineProps({
 	options: {
 		type: Object as PropType<FormOption>,
 		required: true
@@ -58,11 +58,22 @@ const { options, formData, edit, update } = defineProps({
 	update: {
 		type: Function,
 		required: true
-	}
+	},
+  isRef: {
+    type: Boolean,
+    required: false
+  },
 });
 
+const form = checkIsRef();
 
-const form = ref({ ...(edit ? formData : {}) });
+// 如果传入的isRef为true，表明formData已经是一个响应式的数据了，不需要再次创建响应式对象
+function checkIsRef (){
+  if(isRef){
+    return formData;
+  }
+  return ref({ ...(edit ? formData : {}) });
+}
 
 const rules: FormRules = options.list.map(item => {
 	if (item.required) {
