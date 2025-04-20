@@ -28,7 +28,7 @@
       <TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData">
       </TableEdit>
     </el-dialog>
-    <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close
+    <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close :open="handleAdd"
                :close-on-click-modal="false" @close="closeAddDialog">
       <TableEdit :form-data="addRowData" :options="options" :edit=true :update="insertData">
       </TableEdit>
@@ -157,7 +157,7 @@ let options = ref<FormOption>({
     { prop: 'id', label: '工号', type: 'input', disabled: true, placeholder: '系统自动分配' },
     { prop: 'name', label: '姓名', type: 'input' },
     { prop: 'phoneNum', label: '电话', type: 'input' },
-    { prop: 'hireDate', label: '入职日期', type: 'input', disabled: true },
+    { prop: 'hireDate', label: '入职日期', type: 'input', disabled: true, placeholder: '系统自动记录' },
     { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, change: handleDepartmentSelected},
     { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title_select },
     { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
@@ -181,6 +181,12 @@ const handleEdit = async (row: Employee) => {
   editRowData.value = {...row, ...deptData};
   EditVisible.value = true;
 };
+
+const handleAdd = async () => {
+  s_departmentSV.value = await getDepartmentSelectionView(true);
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
+}
+
 const editData = async (form: Employee) => {
   closeEditDialog()
   await updateEmployee(form)
