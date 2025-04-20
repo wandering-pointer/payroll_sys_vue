@@ -42,7 +42,7 @@ import { FormOption } from '@/types/form-option';
 import { FormInstance, FormRules, UploadProps } from 'element-plus';
 import { PropType, ref } from 'vue';
 
-const { options, formData, edit, update, isRef } = defineProps({
+const { options, formData, edit, update } = defineProps({
 	options: {
 		type: Object as PropType<FormOption>,
 		required: true
@@ -59,21 +59,9 @@ const { options, formData, edit, update, isRef } = defineProps({
 		type: Function,
 		required: true
 	},
-  isRef: {
-    type: Boolean,
-    required: false
-  },
 });
 
-const form = checkIsRef();
-
-// 如果传入的isRef为true，表明formData已经是一个响应式的数据了，不需要再次创建响应式对象
-function checkIsRef (){
-  if(isRef){
-    return formData;
-  }
-  return ref({ ...(edit ? formData : {}) });
-}
+const form = formData;
 
 const rules: FormRules = options.list.map(item => {
 	if (item.required) {
@@ -88,12 +76,12 @@ const saveEdit = (formEl: FormInstance | undefined) => {
 	if (!formEl) return;
 	formEl.validate(valid => {
 		if (!valid) return false;
-		update(form.value);
+		update(form);
 	});
 };
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (response, uploadFile) => {
-	form.value.thumb = URL.createObjectURL(uploadFile.raw!);
+	form.thumb = URL.createObjectURL(uploadFile.raw!);
 };
 
 </script>

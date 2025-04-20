@@ -118,10 +118,10 @@ let options = ref<FormOption>({
 const EditVisible = ref(false);
 const AddVisible = ref(false);
 const editRowData = ref({});
-const addRowData = {
+const addRowData = ref({
   usable: true,
   name: ''
-}
+})
 const handleEdit = (row: Department) => {
 	editRowData.value = { ...row };
 	EditVisible.value = true;

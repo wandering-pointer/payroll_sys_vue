@@ -25,7 +25,7 @@
     </div>
     <el-dialog :title="'编辑'" v-model="EditVisible" width="700px" destroy-on-close
                :close-on-click-modal="false" @close="closeEditDialog">
-      <TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData" :is-ref=true>
+      <TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData">
       </TableEdit>
     </el-dialog>
     <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close
@@ -167,9 +167,9 @@ let options = ref<FormOption>({
 const EditVisible = ref(false);
 const AddVisible = ref(false);
 const editRowData = ref({});
-const addRowData = {
+const addRowData = ref({
   working: true,
-}
+})
 const handleEdit = async (row: Employee) => {
   s_departmentSV.value = await getDepartmentSelectionView(true);
   s_jobSV_title.value = await getJobSelectionView('title');

@@ -138,9 +138,9 @@ let options = ref<FormOption>({
 const EditVisible = ref(false);
 const AddVisible = ref(false);
 const editRowData = ref({});
-const addRowData = {
+const addRowData = ref({
   usable: true,
-}
+})
 const handleEdit = async (row: Job) => {
   departmentSelectionView.value = await getDepartmentSelectionView(true);
   editRowData.value = {...row};
