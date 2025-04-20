@@ -172,7 +172,7 @@ const addRowData = ref({
 })
 const handleEdit = async (row: Employee) => {
   s_departmentSV.value = await getDepartmentSelectionView(true);
-  s_jobSV_title.value = await getJobSelectionView('title');
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
 
   const deptId = Number(jobSV_deptId.value.filter(item => item.value === row.jobId)[0].label);
   const deptData = {deptId: deptId}; // 把部门名称绑定到显示上
