@@ -195,7 +195,7 @@ const editData = async (form: Employee) => {
 
 const insertData = async (form) => {
   closeAddDialog()
-  await insertEmployee(form, form.deptId)
+  await insertEmployee(form)
   getData();
 };
 

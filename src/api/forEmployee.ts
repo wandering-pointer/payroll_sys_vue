@@ -17,12 +17,11 @@ export const updateEmployee = (data) => {
     });
 };
 
-export const insertEmployee = (data, deptId) => {
+export const insertEmployee = (data) => {
     return request({
         url: '/employee/insert',
         method: 'post',
         data: data,
-        params: {deptId: deptId}
     });
 };
 
