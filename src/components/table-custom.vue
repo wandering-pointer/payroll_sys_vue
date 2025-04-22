@@ -70,21 +70,36 @@
                             </span>
                         </slot>
                     </template>
-                  <template #default="{ row, column, $index }" v-if="item.type === 'for-userAccount'">
-                    <slot :name="item.prop" :rows="row" :index="$index">
-                      <template v-if="item.prop == 'operator'">
-                        <el-button type="primary" size="small" :icon="Edit" @click="editFunc(row)">
-                          编辑
-                        </el-button>
-                        <el-button type="warning" size="small" :icon="WarnTriangleFilled" @click="viewFunc(row)">
-                          重置密码
-                        </el-button>
-                        <el-button type="danger" size="small" :icon="Delete" @click="handleDelete(row)">
-                          删除
+<!-- ===================================== 高度自定义的操作栏 ==================================================== -->
+
+                    <template #default="{ row, column, $index }" v-if="item.type == 'open-button'">
+                      <template v-for="info in item.btnInfo">
+                        <el-button :type="info.type" :icon="info.icon"
+                                   @click="(info.needConfirm) ?
+                                   handleConfirm(info.needConfirm.op, info.handler, row) : info.handler(row)"
+                                   size="small">
+                          {{info.label}}
                         </el-button>
                       </template>
-                    </slot>
-                  </template>
+                    </template>
+
+<!-- ========================================================================================================== -->
+                    <template #default="{ row, column, $index }" v-if="item.type === 'for-userAccount'">
+                      <slot :name="item.prop" :rows="row" :index="$index">
+                        <template v-if="item.prop == 'operator'">
+                          <el-button type="primary" size="small" :icon="Edit" @click="editFunc(row)">
+                            编辑
+                          </el-button>
+                          <el-button type="warning" size="small" :icon="WarnTriangleFilled" @click="viewFunc(row)">
+                            重置密码
+                          </el-button>
+                          <el-button type="danger" size="small" :icon="Delete" @click="handleDelete(row)">
+                            删除
+                          </el-button>
+                        </template>
+
+                      </slot>
+                    </template>
                 </el-table-column>
             </template>
         </el-table>
@@ -98,6 +113,7 @@ import { toRefs, PropType, ref } from 'vue'
 import {Delete, Edit, View, Refresh, WarnTriangleFilled} from '@element-plus/icons-vue';
 import { ElMessageBox } from 'element-plus';
 import {formatSelectionView} from "../types/SelectionView";
+import {handleConfirm} from "@/utils/MyLittleUtils";
 
 const props = defineProps({
     // 表格相关
@@ -116,6 +132,10 @@ const props = defineProps({
     hasToolbar: {
         type: Boolean,
         default: true
+    },
+    btnInfo: {
+        type: Array,
+        default: []
     },
     //  分页相关
     hasPagination: {

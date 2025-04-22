@@ -47,7 +47,7 @@
 
 <script setup lang="ts" name="basetable">
 import {ref, reactive, computed} from 'vue';
-import { CirclePlusFilled } from '@element-plus/icons-vue';
+import {CirclePlusFilled, Delete} from '@element-plus/icons-vue';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
@@ -119,7 +119,12 @@ let columns = ref([
   { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view' },
   { prop: 'level', label: '等级' },
   { prop: 'working', label: '状态' },
-  { prop: 'operator', label: '操作', width: 250 },
+  { prop: 'operator', label: '操作', width: 250, type: 'open-button', btnInfo: [
+      {label: '查看', type: 'warning', icon: 'View', handler: handleView },
+      {label: '编辑', type: 'primary', icon: 'Edit', handler: handleEdit },
+      {label: '删除', type: 'danger', icon: 'Delete', needConfirm: {op: '删除', func: handleDelete,} }
+    ]
+  }
 ])
 const page = reactive({
   index: 1,
@@ -129,15 +134,16 @@ const page = reactive({
 const tableData = ref<Employee[]>([]);
 const getData = async () => {
   s_departmentSV.value = await getDepartmentSelectionView(null);
-  s_jobSV_deptId.value = await getJobSelectionView('deptId');
-  s_jobSV_title.value = await getJobSelectionView('title');
-  s_jobSV_salary.value = await getJobSelectionView('salary');
+  s_jobSV_deptId.value = await getJobSelectionView('deptId', null);
+  s_jobSV_title.value = await getJobSelectionView('title', null);
+  s_jobSV_salary.value = await getJobSelectionView('salary', null);
   s_jobSV_deptName.value = labelToValueLabel(s_departmentSV.value, s_jobSV_deptId.value)
   const data = await listEmployee({
     size: page.size,
     index: page.index,
     employee: {},
-  })
+  },
+  null)
   tableData.value = data.list;
   page.total = data.total
   return data
@@ -170,7 +176,7 @@ const editRowData = ref({});
 const addRowData = ref({
   working: true,
 })
-const handleEdit = async (row: Employee) => {
+async function handleEdit(row: Employee) {
   s_departmentSV.value = await getDepartmentSelectionView(true);
   s_jobSV_title_select.value = await getJobSelectionView('title', true);
 
@@ -219,7 +225,7 @@ const viewData = ref({
   row: {},
   list: []
 });
-const handleView = (row: Employee) => {
+async function handleView(row: Employee){
   viewData.value.row = { ...row }
   viewData.value.list = [
     { prop: 'id', label: '工号' },
@@ -236,7 +242,7 @@ const handleView = (row: Employee) => {
 };
 
 // 删除相关
-const handleDelete = async (row: Employee) => {
+async function handleDelete(row: Employee) {
   await deleteEmployee({id: row.id})
   getData()
 }
