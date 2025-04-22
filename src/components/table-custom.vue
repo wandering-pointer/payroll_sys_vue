@@ -70,6 +70,21 @@
                             </span>
                         </slot>
                     </template>
+                  <template #default="{ row, column, $index }" v-if="item.type === 'for-userAccount'">
+                    <slot :name="item.prop" :rows="row" :index="$index">
+                      <template v-if="item.prop == 'operator'">
+                        <el-button type="primary" size="small" :icon="Edit" @click="editFunc(row)">
+                          编辑
+                        </el-button>
+                        <el-button type="warning" size="small" :icon="WarnTriangleFilled" @click="viewFunc(row)">
+                          重置密码
+                        </el-button>
+                        <el-button type="danger" size="small" :icon="Delete" @click="handleDelete(row)">
+                          删除
+                        </el-button>
+                      </template>
+                    </slot>
+                  </template>
                 </el-table-column>
             </template>
         </el-table>
@@ -80,7 +95,7 @@
 
 <script setup lang="ts">
 import { toRefs, PropType, ref } from 'vue'
-import { Delete, Edit, View, Refresh } from '@element-plus/icons-vue';
+import {Delete, Edit, View, Refresh, WarnTriangleFilled} from '@element-plus/icons-vue';
 import { ElMessageBox } from 'element-plus';
 import {formatSelectionView} from "../types/SelectionView";
 

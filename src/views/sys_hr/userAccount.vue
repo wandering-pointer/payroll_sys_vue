@@ -5,16 +5,13 @@
       <TableCustom :columns="columns"
                    :tableData="tableData"
                    :total="page.total"
-                   :viewFunc="handleView"
+                   :viewFunc="handelResetPassword"
                    :delFunc="handleDelete"
                    :editFunc="handleEdit"
                    :refresh="getData"
                    :currentPage="page.index"
                    :changePage="changePage"
                    :page-size="page.size">
-        <template #toolbarBtn>
-          <el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增</el-button>
-        </template>
         <template #usable="{ rows }">
           <el-tag :type="rows.usable ? 'success' : 'danger'">
             {{ rows.usable ? '正 常' : '禁 用' }}
@@ -33,15 +30,6 @@
       <TableEdit :form-data="addRowData" :options="options" :edit=true :update="insertData">
       </TableEdit>
     </el-dialog>
-    <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-      <TableDetail :data="viewData">
-        <template #usable="{ rows }">
-          <el-tag :type="rows.usable ? 'success' : 'danger'">
-            {{ rows.usable ? '正 常' : '禁 用' }}
-          </el-tag>
-        </template>
-      </TableDetail>
-    </el-dialog>
   </div>
 </template>
 
@@ -55,6 +43,7 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteUserAccount, insertUserAccount, listUserAccount, updateUserAccount} from "@/api/forUserAccount";
 import {UserAccount, userRolesSelectionView} from "@/types/UserAccount";
+import {handleConfirm} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -88,7 +77,7 @@ let columns = ref([
   { prop: 'empId', label: '工号' },
   { prop: 'role', label: '角色', type: 'selection-view', selectionView: userRolesSelectionView },
   { prop: 'usable', label: '状态' },
-  { prop: 'operator', label: '操作', width: 250 },
+  { prop: 'operator', label: '操作', type: 'for-userAccount', width: 300 },
 ])
 const page = reactive({
   index: 1,
@@ -118,9 +107,9 @@ let options = ref<FormOption>({
   labelWidth: '100px',
   span: 24,
   list: [
-    { prop: 'accountId', label: '工种编号' , type: 'input', disabled: true, placeholder: '系统自动分配'},
-    { prop: 'title', label: '工种名称', type: 'input'},
-    { prop: 'salary', label: '基本工资', type: 'input' },
+    { prop: 'userName', label: '账号', type: 'input', disabled: true, placeholder: '不可修改' },
+    { prop: 'empId', label: '工号', type: 'input', disabled: true, placeholder: '不可修改' },
+    { prop: 'role', label: '角色', type: 'select', opts: userRolesSelectionView, disabled: true },
     { prop: 'usable', label: '状态', type: 'switch', activeText: '正常', inactiveText: '禁用'},
   ]
 })
@@ -136,6 +125,7 @@ const handleEdit = async (row: UserAccount) => {
 };
 const editData = async (form: UserAccount) => {
   closeEditDialog()
+  form['pwdHash'] = null
   await updateUserAccount(form)
   getData();
 };
@@ -154,21 +144,10 @@ const closeAddDialog = () => {
   AddVisible.value = false;
 };
 
-// 查看详情弹窗相关
-const visible1 = ref(false);
-const viewData = ref({
-  row: {},
-  list: []
-});
-const handleView = (row: UserAccount) => {
-  viewData.value.row = { ...row }
-  viewData.value.list = [
-    { prop: 'accountId', label: '工种编号' },
-    { prop: 'title', label: '工种名称' },
-    { prop: 'salary', label: '基本工资' },
-    { prop: 'usable', label: '状态' },
-  ]
-  visible1.value = true;
+// 重置密码动作
+const handelResetPassword = (row: UserAccount) => {
+  row['pwdHash'] = '123456'
+  handleConfirm('重置该账号密码为“123456”', updateUserAccount, row);
 };
 
 // 删除相关
