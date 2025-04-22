@@ -18,21 +18,27 @@ export const menuData: Menus[] = [
         children: [
             {
                 id: '101-1',
-                pid: '6',
+                pid: '7',
                 index: '/dept-manage',
                 title: '部门管理',
             },
             {
                 id: '101-2',
-                pid: '6',
+                pid: '7',
                 index: '/job-manage',
                 title: '工种管理',
             },
             {
                 id: '101-3',
-                pid: '6',
+                pid: '7',
                 index: '/employee-manage',
                 title: '员工管理',
+            },
+            {
+                id: '101-4',
+                pid: '7',
+                index: '/userAccount-manage',
+                title: '账号管理',
             },
         ],
     },

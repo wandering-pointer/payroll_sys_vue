@@ -254,6 +254,15 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/employee.vue'),
             },
+            {
+                path: '/userAccount-manage',
+                name: 'userAccount-manage',
+                meta: {
+                    title: '账号管理',
+                    permiss: '101',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/userAccount.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //
