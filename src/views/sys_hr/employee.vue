@@ -42,6 +42,26 @@
         </template>
       </TableDetail>
     </el-dialog>
+
+    <el-dialog title="授权" v-model="visibleRole" width="500px" destroy-on-close>
+      <div style="text-align:center">
+        <div>
+          <el-checkbox label="普通员工" v-model="roles.employee" size="large" :disabled="true" class="for-checkbox"/>
+          <el-checkbox label="部门经理" v-model="roles.finance" size="large" class="for-checkbox"/>
+        </div>
+        <div>
+          <el-checkbox label="财务管理员" v-model="roles.manager" size="large" class="for-checkbox"/>
+          <el-checkbox label="人力资源管理员" v-model="roles.hr" size="large" class="for-checkbox"/>
+        </div>
+        <div>
+          <el-checkbox label="系统运维" v-model="roles.admin" size="large" class="for-checkbox"/>
+          <el-checkbox label="超级管理员" v-model="roles.root" size="large" class="for-checkbox"/>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <el-button type="success" @click="editRole" style="margin: 20px"> 保存 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -119,9 +139,10 @@ let columns = ref([
   { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view' },
   { prop: 'level', label: '等级' },
   { prop: 'working', label: '状态' },
-  { prop: 'operator', label: '操作', width: 250, type: 'open-button', btnInfo: [
+  { prop: 'operator', label: '操作', width: 350, type: 'open-button', btnInfo: [
       {label: '查看', type: 'warning', icon: 'View', handler: handleView },
       {label: '编辑', type: 'primary', icon: 'Edit', handler: handleEdit },
+      {label: '授权', type: 'success', icon: 'Position', handler: handleEditRole },
       {label: '删除', type: 'danger', icon: 'Delete', needConfirm: {op: '删除', func: handleDelete,} }
     ]
   }
@@ -246,6 +267,24 @@ async function handleDelete(row: Employee) {
   await deleteEmployee({id: row.id})
   getData()
 }
+
+// 编辑权限相关
+const visibleRole = ref(false);
+const roles = ref({
+  root: false,
+  admin: false,
+  hr: false,
+  finance: false,
+  manager: false,
+  employee: true,
+})
+function handleEditRole() {
+  visibleRole.value = true;
+}
+function editRole(){
+  console.log(roles.value);
+}
+
 </script>
 
 <style scoped>
@@ -254,5 +293,9 @@ async function handleDelete(row: Employee) {
   margin: auto;
   width: 40px;
   height: 40px;
+}
+
+.for-checkbox{
+  width: 150px;
 }
 </style>
