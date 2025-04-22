@@ -1,6 +1,6 @@
 export interface SelectionView {
     label: string;
-    value: number;
+    value: any;
     parent: number;
 }
 
@@ -14,7 +14,7 @@ export function formatSelectionView(list, value){
 // list2元素的label（数字）指向list1元素的value，将list2元素的label替换为其所对应的list1元素中value对应的label
 export function labelToValueLabel(list1: SelectionView[], list2: SelectionView[]): SelectionView[] {
     // 创建一个映射表，方便快速查找 list1 中的元素
-    const valueToLabelMap = new Map<number, string>();
+    const valueToLabelMap = new Map<any, string>();
     for (const item of list1) {
         valueToLabelMap.set(item.value, item.label);
     }
