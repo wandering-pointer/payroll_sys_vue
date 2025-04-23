@@ -78,7 +78,7 @@ import {Employee} from "@/types/Employee";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
 import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
-import {getEmployeeRoles} from "@/api/forUserAccount";
+import {editEmployeeRoles, getEmployeeRoles} from "@/api/forUserAccount";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -272,12 +272,19 @@ async function handleDelete(row: Employee) {
 // 编辑权限相关
 const visibleRole = ref(false);
 const roles = ref({})
+let empId = null
 async function handleEditRole(row) {
   roles.value = await getEmployeeRoles(row.id);
+  empId = row.id;
   visibleRole.value = true;
 }
-function editRole(){
-  console.log(roles.value);
+async function editRole(){
+  await editEmployeeRoles({
+    empId: empId,
+    roles: roles.value,
+  })
+  visibleRole.value = false;
+  await getData()
 }
 
 </script>

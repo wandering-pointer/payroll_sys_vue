@@ -39,3 +39,11 @@ export const getEmployeeRoles = (empId) =>{
         params: {empId: empId}
     });
 }
+
+export const editEmployeeRoles = (data) =>{
+    return request({
+        url: '/userAccount/roles',
+        method: 'post',
+        data: data,
+    });
+}
