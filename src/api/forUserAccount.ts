@@ -31,3 +31,11 @@ export const deleteUserAccount = (data) => {
         data: data
     });
 };
+
+export const getEmployeeRoles = (empId) =>{
+    return request({
+        url: '/userAccount/roles',
+        method: 'get',
+        params: {empId: empId}
+    });
+}
