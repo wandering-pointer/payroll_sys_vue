@@ -144,7 +144,7 @@ let columns = ref([
       {label: '查看', type: 'warning', icon: 'View', handler: handleView },
       {label: '编辑', type: 'primary', icon: 'Edit', handler: handleEdit },
       {label: '授权', type: 'success', icon: 'Position', handler: handleEditRole },
-      {label: '删除', type: 'danger', icon: 'Delete', needConfirm: {op: '删除', func: handleDelete,} }
+      {label: '删除', type: 'danger', icon: 'Delete', needConfirm: {op: '删除', handler: handleDelete,} }
     ]
   }
 ])

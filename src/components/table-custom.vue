@@ -76,7 +76,7 @@
                       <template v-for="info in item.btnInfo">
                         <el-button :type="info.type" :icon="info.icon"
                                    @click="(info.needConfirm) ?
-                                   handleConfirm(info.needConfirm.op, info.handler, row) : info.handler(row)"
+                                   handleConfirm(info.needConfirm.op, info.needConfirm.handler, row) : info.handler(row)"
                                    size="small">
                           {{info.label}}
                         </el-button>
