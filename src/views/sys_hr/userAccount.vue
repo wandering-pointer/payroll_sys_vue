@@ -50,9 +50,9 @@ const query = reactive({
   name: '',
 });
 const searchOpt = ref<FormOptionList[]>([
-  { prop: 'accountId', label: '工种编号', type: 'input' },
-  { prop: 'title', label: '工种名称', type: 'input' },
-  { prop: 'salary', label: '基本工资', type: 'input' },
+  { prop: 'userName', label: '账号', type: 'input', placeholder: '精确匹配' },
+  { prop: 'empId', label: '工号', type: 'input', placeholder: '精确匹配' },
+  { prop: 'role', label: '角色', type: 'select', opts: userRolesSelectionView, style: 'width: 100px' },
   { prop: 'usable', label: '状态', type: 'select', style: 'width: 100px', opts: [
       { label: '正常', value: true },
       { label: '禁用', value: false }
