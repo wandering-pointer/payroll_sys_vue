@@ -47,10 +47,10 @@
       <div style="text-align:center">
         <div>
           <el-checkbox label="普通员工" v-model="roles.employee" size="large" :disabled="true" class="for-checkbox"/>
-          <el-checkbox label="部门经理" v-model="roles.finance" size="large" class="for-checkbox"/>
+          <el-checkbox label="部门经理" v-model="roles.manager" size="large" class="for-checkbox"/>
         </div>
         <div>
-          <el-checkbox label="财务管理员" v-model="roles.manager" size="large" class="for-checkbox"/>
+          <el-checkbox label="财务管理员" v-model="roles.finance" size="large" class="for-checkbox"/>
           <el-checkbox label="人力资源管理员" v-model="roles.hr" size="large" class="for-checkbox"/>
         </div>
         <div>
