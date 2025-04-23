@@ -228,6 +228,15 @@ const routes: RouteRecordRaw[] = [
 //========================================= 以下是我自己的 =============================================
 //
             {
+                path: '/debug',
+                name: 'debug',
+                meta: {
+                    title: '开发者选项',
+                    permiss: 'debug',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_debug/developerOptions.vue'),
+            },
+            {
                 path: '/dept-manage',
                 name: 'dept-manage',
                 meta: {

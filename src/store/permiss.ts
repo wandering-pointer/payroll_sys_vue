@@ -42,6 +42,7 @@ export const usePermissStore = defineStore('permiss', {
                 '64',
                 '65',
                 '66',
+                'debug',
                 '101',
             ],
             ADMIN: [],
