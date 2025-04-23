@@ -238,6 +238,7 @@ const closeAddDialog = () => {
 // 筛选所选部门的工种
 function handleDepartmentSelected(value: number) {
   editRowData.value.jobId = null;
+  addRowData.value.jobId = null;
   s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
 }
 
