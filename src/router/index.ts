@@ -270,7 +270,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/manager/attendance',
                 meta: {
-                    title: '本部门考勤记录',
+                    title: '全司考勤记录',
                     permiss: '102',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/attendance.vue'),

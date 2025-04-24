@@ -1,13 +1,13 @@
 export interface SelectionView {
     label: string;
     value: any;
-    parent: number;
+    parent: string;
 }
 
 // 映射函数
 export function formatSelectionView(list, value){
     //console.log(value);
-    const item = list.find((element) => element.value === value);
+    const item = list.find((element) => element.value == value);
     return item?.label; // 使用可选链操作符，避免 item 为 undefined 时出错
 }
 
@@ -21,7 +21,7 @@ export function labelToValueLabel(list1: SelectionView[], list2: SelectionView[]
 
     // 遍历 list2 并替换 label
     const updatedList2 = list2.map(item => {
-        const newLabel = valueToLabelMap.get(Number(item.label)); // 确保 label 转换为数字
+        const newLabel = valueToLabelMap.get(item.label); // 确保 label 转换为数字
         if (newLabel !== undefined) {
             return { ...item, label: newLabel }; // 替换 label
         }

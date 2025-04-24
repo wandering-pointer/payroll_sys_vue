@@ -32,3 +32,17 @@ export const deleteEmployee = (data) => {
         data: data
     });
 };
+
+export const getEmployeeSelectionView_dept = () => {
+    return request({
+        url: '/employee/dept/selectionView',
+        method: 'get',
+    });
+};
+
+export const getEmployeeSelectionView = () => {
+    return request({
+        url: '/employee/selectionView',
+        method: 'get',
+    });
+};

@@ -52,7 +52,7 @@ export const menuData: Menus[] = [
                 id: '102-1',
                 pid: '8',
                 index: '/manager/attendance',
-                title: '本部门考勤记录',
+                title: '全司考勤记录',
             },
         ],
     },
