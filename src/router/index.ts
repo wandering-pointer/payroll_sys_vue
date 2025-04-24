@@ -229,7 +229,6 @@ const routes: RouteRecordRaw[] = [
 //
             {
                 path: '/debug',
-                name: 'debug',
                 meta: {
                     title: '开发者选项',
                     permiss: 'debug',
@@ -237,8 +236,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_debug/developerOptions.vue'),
             },
             {
-                path: '/dept-manage',
-                name: 'dept-manage',
+                path: '/hr/department',
                 meta: {
                     title: '部门管理',
                     permiss: '101',
@@ -246,8 +244,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/department.vue'),
             },
             {
-                path: '/job-manage',
-                name: 'job-manage',
+                path: '/hr/job',
                 meta: {
                     title: '工种管理',
                     permiss: '101',
@@ -255,8 +252,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/job.vue'),
             },
             {
-                path: '/employee-manage',
-                name: 'employee-manage',
+                path: '/hr/employee',
                 meta: {
                     title: '员工管理',
                     permiss: '101',
@@ -264,13 +260,20 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/employee.vue'),
             },
             {
-                path: '/userAccount-manage',
-                name: 'userAccount-manage',
+                path: '/hr/userAccount',
                 meta: {
                     title: '账号管理',
                     permiss: '101',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/userAccount.vue'),
+            },
+            {
+                path: '/manager/attendance',
+                meta: {
+                    title: '本部门考勤记录',
+                    permiss: '102',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/attendance.vue'),
             },
 //
 //========================================= 以上是我自己的 =============================================
