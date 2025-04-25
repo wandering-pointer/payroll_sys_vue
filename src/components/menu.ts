@@ -40,6 +40,12 @@ export const menuData: Menus[] = [
                 index: '/hr/userAccount',
                 title: '账号管理',
             },
+            {
+                id: '101-5',
+                pid: '7',
+                index: '/hr/policy',
+                title: '加班津贴规则',
+            },
         ],
     },
     {

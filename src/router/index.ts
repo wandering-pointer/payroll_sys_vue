@@ -276,6 +276,14 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/userAccount.vue'),
             },
             {
+                path: '/hr/policy',
+                meta: {
+                    title: '加班津贴规则',
+                    permiss: '101',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/policy.vue'),
+            },
+            {
                 path: '/manager/attendance',
                 meta: {
                     title: '部门考勤记录',
