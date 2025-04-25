@@ -64,7 +64,7 @@ const searchOpt = ref<FormOptionList[]>([
   },
 ])
 const handleSearch = async () => {
-  const data = await listAttendance({
+  const data = await listDeptAttendance({
         size: page.size,
         index: 1,
         attendance: query,
@@ -120,7 +120,6 @@ let options = ref<FormOption>({
   ]
 })
 const EditVisible = ref(false);
-const AddVisible = ref(false);
 const editRowData = ref({});
 async function handleEdit(row: Attendance) {
   editRowData.value = {...row};
@@ -136,10 +135,6 @@ const editData = async (form: Attendance | any) => {
 
 const closeEditDialog = () => {
   EditVisible.value = false;
-};
-
-const closeAddDialog = () => {
-  AddVisible.value = false;
 };
 
 // 删除相关
