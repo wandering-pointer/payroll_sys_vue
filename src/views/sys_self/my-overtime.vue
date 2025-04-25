@@ -13,11 +13,11 @@
                    :changePage="changePage"
                    :page-size="page.size">
         <template #toolbarBtn>
-          <el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增</el-button>
+          <el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增加班记录</el-button>
         </template>
-        <template #working="{ rows }">
-          <el-tag :type="rows.working ? 'success' : 'danger'">
-            {{ rows.working ? '在 职' : '离 职' }}
+        <template #status="{ rows }">
+          <el-tag :type="(rows.status == 'pending') ? 'primary' : ((rows.status == 'approved') ? 'success' : 'danger')">
+            {{ (rows.status == 'pending') ? '待审核' : ((rows.status == 'approved') ? '已通过' : '未通过') }}
           </el-tag>
         </template>
       </TableCustom>
@@ -35,9 +35,9 @@
     </el-dialog>
     <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
       <TableDetail :data="viewData">
-        <template #working="{ rows }">
-          <el-tag :type="rows.working ? 'success' : 'danger'">
-            {{ rows.working ? '在 职' : '离 职' }}
+        <template #status="{ rows }">
+          <el-tag :type="rows.status ? 'success' : 'danger'">
+            {{ rows.status ? '在 职' : '离 职' }}
           </el-tag>
         </template>
       </TableDetail>
@@ -55,8 +55,10 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteOvertimeRecord, insertOvertimeRecord, listOvertimeRecord, updateOvertimeRecord} from "@/api/forOvertimeRecord";
 import {OvertimeRecord} from "@/types/OvertimeRecord";
+import {getOvertimeRecordSelectionView} from "@/api/forOvertimeRecord";
 import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
+import {editOvertimeRecordRoles, getOvertimeRecordRoles} from "@/api/forUserAccount";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -88,13 +90,14 @@ const searchOpt = ref<FormOptionList[]>([
   { prop: 'name', label: '姓名', type: 'input', placeholder: '模糊搜索' },
   { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, style: 'width: 150px' },
   { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}], style: 'width: 100px' },
-  { prop: 'working', label: '状态', type: 'select', style: 'width: 100px', opts: [
+  { prop: 'status', label: '状态', type: 'select', style: 'width: 100px', opts: [
       { label: '在职', value: true },
       { label: '离职', value: false }
     ]
   },
 ])
 const handleSearch = async () => {
+  s_departmentSV.value = await getOvertimeRecordSelectionView(null);
   const data = await listOvertimeRecord({
     size: page.size,
     index: 1,
@@ -115,7 +118,7 @@ let columns = ref([
   { prop: 'jobId', label: '工种', selectionView: jobSV_title, type: 'selection-view' },
   { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view' },
   { prop: 'level', label: '等级' },
-  { prop: 'working', label: '状态' },
+  { prop: 'status', label: '状态' },
   { prop: 'operator', label: '操作', width: 350, type: 'open-button', btnInfo: [
       {label: '查看', type: 'warning', icon: 'View', handler: handleView },
       {label: '编辑', type: 'primary', icon: 'Edit', handler: handleEdit },
@@ -131,11 +134,17 @@ const page = reactive({
 })
 const tableData = ref<OvertimeRecord[]>([]);
 const getData = async () => {
+  s_departmentSV.value = await getOvertimeRecordSelectionView(null);
+  s_jobSV_deptId.value = await getJobSelectionView('deptId', null);
+  s_jobSV_title.value = await getJobSelectionView('title', null);
+  s_jobSV_salary.value = await getJobSelectionView('salary', null);
+  s_jobSV_deptName.value = labelToValueLabel(s_departmentSV.value, s_jobSV_deptId.value)
   const data = await listOvertimeRecord({
     size: page.size,
     index: page.index,
     employee: {},
-  })
+  },
+  null)
   tableData.value = data.list;
   page.total = data.total
   return data
@@ -159,18 +168,30 @@ let options = ref<FormOption>({
     { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, change: handleOvertimeRecordSelected},
     { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title_select },
     { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
-    { prop: 'working', label: '状态' , type: 'switch', activeText: '在职', inactiveText: '离职'},
+    { prop: 'status', label: '状态' , type: 'switch', activeText: '在职', inactiveText: '离职'},
   ]
 })
 const EditVisible = ref(false);
 const AddVisible = ref(false);
 const editRowData = ref({});
 const addRowData = ref({
-  working: true,
+  status: true,
 })
 async function handleEdit(row: OvertimeRecord) {
-  editRowData.value = {...row};
+  s_departmentSV.value = await getOvertimeRecordSelectionView(true);
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
+
+  const deptId = Number(jobSV_deptId.value.filter(item => item.value === row.jobId)[0].label);
+  const deptData = {deptId: deptId}; // 把部门名称绑定到显示上
+  handleOvertimeRecordSelected(deptId);
+
+  editRowData.value = {...row, ...deptData};
   EditVisible.value = true;
+};
+
+const handleAdd = async () => {
+  s_departmentSV.value = await getOvertimeRecordSelectionView(true);
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
 }
 
 const editData = async (form: OvertimeRecord) => {
@@ -193,6 +214,13 @@ const closeAddDialog = () => {
   AddVisible.value = false;
 };
 
+// 筛选所选部门的工种
+function handleOvertimeRecordSelected(value: number) {
+  editRowData.value.jobId = null;
+  addRowData.value.jobId = null;
+  s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
+}
+
 // 查看详情弹窗相关
 const visible1 = ref(false);
 const viewData = ref({
@@ -210,7 +238,7 @@ async function handleView(row: OvertimeRecord){
     { prop: 'jobId', label: '工种', selectionView: jobSV_title, type: 'selection-view', isSelectionView: true },
     { prop: 'jobId', label: '基本工资', selectionView: jobSV_salary, type: 'selection-view', isSelectionView: true },
     { prop: 'level', label: '等级' },
-    { prop: 'working', label: '状态' },
+    { prop: 'status', label: '状态' },
   ]
   visible1.value = true;
 };
@@ -219,6 +247,24 @@ async function handleView(row: OvertimeRecord){
 async function handleDelete(row: OvertimeRecord) {
   await deleteOvertimeRecord({id: row.id})
   getData()
+}
+
+// 编辑权限相关
+const visibleRole = ref(false);
+const roles = ref({})
+let empId = null
+async function handleEditRole(row) {
+  roles.value = await getOvertimeRecordRoles(row.id);
+  empId = row.id;
+  visibleRole.value = true;
+}
+async function editRole(){
+  await editOvertimeRecordRoles({
+    empId: empId,
+    roles: roles.value,
+  })
+  visibleRole.value = false;
+  await getData()
 }
 
 </script>

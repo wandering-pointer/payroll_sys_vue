@@ -63,6 +63,20 @@ export const menuData: Menus[] = [
         ],
     },
     {
+        id: '103',
+        icon: 'goods',
+        index: '9',
+        title: '员工自助功能',
+        children: [
+            {
+                id: '103-1',
+                pid: '8',
+                index: '/self/overtime',
+                title: '个人加班记录',
+            },
+        ],
+    },
+    {
         id: 'debug',
         icon: 'Lock',
         index: 'debug',
