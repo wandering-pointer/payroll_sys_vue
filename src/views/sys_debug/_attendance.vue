@@ -40,7 +40,7 @@ import {
 } from "@/api/forAttendance";
 import {Attendance} from "@/types/Attendance";
 import {SelectionView} from "@/types/SelectionView";
-import {getEmployeeSelectionView_dept} from "@/api/forEmployee";
+import {getEmployeeSelectionView, getEmployeeSelectionView_dept} from "@/api/forEmployee";
 import {formatDateTime} from "@/utils/MyLittleUtils";
 
 const s_employeeSV_name = ref<SelectionView[]>([]);
@@ -89,7 +89,7 @@ const page = reactive({
 })
 const tableData = ref<Attendance[]>([]);
 const getData = async () => {
-  s_employeeSV_name.value = await getEmployeeSelectionView_dept()
+  s_employeeSV_name.value = await getEmployeeSelectionView()
   const data = await listAttendance({
     size: page.size,
     index: page.index,
