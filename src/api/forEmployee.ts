@@ -46,3 +46,10 @@ export const getEmployeeSelectionView = () => {
         method: 'get',
     });
 };
+
+export const getCurrentUserDeptName = () => {
+    return request({
+        url: '/employee/deptName',
+        method: 'get',
+    });
+};

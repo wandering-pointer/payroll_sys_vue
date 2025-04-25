@@ -43,7 +43,7 @@ import {
 } from "@/api/forAttendance";
 import {Attendance} from "@/types/Attendance";
 import {SelectionView} from "@/types/SelectionView";
-import {getEmployeeSelectionView_dept} from "@/api/forEmployee";
+import {getCurrentUserDeptName, getEmployeeSelectionView_dept} from "@/api/forEmployee";
 import {formatDateTime} from "@/utils/MyLittleUtils";
 
 const s_employeeSV_name = ref<SelectionView[]>([]);
@@ -104,7 +104,12 @@ const getData = async () => {
   page.total = data.total
   return data
 };
+async function getDeptName() {
+  deptName.value = await getCurrentUserDeptName()
+}
 getData();
+getDeptName()
+
 
 const changePage = (val: number) => {
   page.index = val;
