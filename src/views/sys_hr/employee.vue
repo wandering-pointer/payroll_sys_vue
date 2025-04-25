@@ -42,6 +42,26 @@
         </template>
       </TableDetail>
     </el-dialog>
+
+    <el-dialog title="授权" v-model="visibleRole" width="500px" destroy-on-close>
+      <div style="text-align:center">
+        <div>
+          <el-checkbox label="普通员工" v-model="roles.employee" size="large" :disabled="true" class="for-checkbox"/>
+          <el-checkbox label="部门经理" v-model="roles.manager" size="large" class="for-checkbox"/>
+        </div>
+        <div>
+          <el-checkbox label="财务管理员" v-model="roles.finance" size="large" class="for-checkbox"/>
+          <el-checkbox label="人力资源管理员" v-model="roles.hr" size="large" class="for-checkbox"/>
+        </div>
+        <div>
+          <el-checkbox label="系统运维" v-model="roles.admin" size="large" class="for-checkbox"/>
+          <el-checkbox label="超级管理员" v-model="roles.root" size="large" class="for-checkbox"/>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <el-button type="success" @click="editRole" style="margin: 20px"> 保存 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,10 +73,12 @@ import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
-import {deleteOvertimeRecord, insertOvertimeRecord, listOvertimeRecord, updateOvertimeRecord} from "@/api/forOvertimeRecord";
-import {OvertimeRecord} from "@/types/OvertimeRecord";
+import {deleteEmployee, insertEmployee, listEmployee, updateEmployee} from "@/api/forEmployee";
+import {Employee} from "@/types/Employee";
+import {getDepartmentSelectionView} from "@/api/forDepartment";
 import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
+import {editEmployeeRoles, getEmployeeRoles} from "@/api/forUserAccount";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -95,11 +117,13 @@ const searchOpt = ref<FormOptionList[]>([
   },
 ])
 const handleSearch = async () => {
-  const data = await listOvertimeRecord({
+  s_departmentSV.value = await getDepartmentSelectionView(null);
+  const data = await listEmployee({
     size: page.size,
     index: 1,
     employee: query,
-  })
+  },
+  query.deptId)
   tableData.value = data.list;
   page.total = data.total
   page.index = 1;
@@ -129,13 +153,19 @@ const page = reactive({
   size: 10,
   total: 0,
 })
-const tableData = ref<OvertimeRecord[]>([]);
+const tableData = ref<Employee[]>([]);
 const getData = async () => {
-  const data = await listOvertimeRecord({
+  s_departmentSV.value = await getDepartmentSelectionView(null);
+  s_jobSV_deptId.value = await getJobSelectionView('deptId', null);
+  s_jobSV_title.value = await getJobSelectionView('title', null);
+  s_jobSV_salary.value = await getJobSelectionView('salary', null);
+  s_jobSV_deptName.value = labelToValueLabel(s_departmentSV.value, s_jobSV_deptId.value)
+  const data = await listEmployee({
     size: page.size,
     index: page.index,
     employee: {},
-  })
+  },
+  null)
   tableData.value = data.list;
   page.total = data.total
   return data
@@ -156,7 +186,7 @@ let options = ref<FormOption>({
     { prop: 'name', label: '姓名', type: 'input' },
     { prop: 'phoneNum', label: '电话', type: 'input' },
     { prop: 'hireDate', label: '入职日期', type: 'input', disabled: true, placeholder: '系统自动记录' },
-    { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, change: handleOvertimeRecordSelected},
+    { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, change: handleDepartmentSelected},
     { prop: 'jobId', label: '工种', type: 'select', opts: jobSV_title_select },
     { prop: 'level', label: '等级', type: 'select', opts: [{value: 0}, {value: 1}, {value: 2}, {value: 3}, {value: 4}, {value: 5}] },
     { prop: 'working', label: '状态' , type: 'switch', activeText: '在职', inactiveText: '离职'},
@@ -168,20 +198,32 @@ const editRowData = ref({});
 const addRowData = ref({
   working: true,
 })
-async function handleEdit(row: OvertimeRecord) {
-  editRowData.value = {...row};
+async function handleEdit(row: Employee) {
+  s_departmentSV.value = await getDepartmentSelectionView(true);
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
+
+  const deptId = Number(jobSV_deptId.value.filter(item => item.value === row.jobId)[0].label);
+  const deptData = {deptId: deptId}; // 把部门名称绑定到显示上
+  handleDepartmentSelected(deptId);
+
+  editRowData.value = {...row, ...deptData};
   EditVisible.value = true;
+};
+
+const handleAdd = async () => {
+  s_departmentSV.value = await getDepartmentSelectionView(true);
+  s_jobSV_title_select.value = await getJobSelectionView('title', true);
 }
 
-const editData = async (form: OvertimeRecord) => {
+const editData = async (form: Employee) => {
   closeEditDialog()
-  await updateOvertimeRecord(form)
+  await updateEmployee(form)
   getData();
 };
 
 const insertData = async (form) => {
   closeAddDialog()
-  await insertOvertimeRecord(form)
+  await insertEmployee(form)
   getData();
 };
 
@@ -193,13 +235,20 @@ const closeAddDialog = () => {
   AddVisible.value = false;
 };
 
+// 筛选所选部门的工种
+function handleDepartmentSelected(value: number) {
+  editRowData.value.jobId = null;
+  addRowData.value.jobId = null;
+  s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
+}
+
 // 查看详情弹窗相关
 const visible1 = ref(false);
 const viewData = ref({
   row: {},
   list: []
 });
-async function handleView(row: OvertimeRecord){
+async function handleView(row: Employee){
   viewData.value.row = { ...row }
   viewData.value.list = [
     { prop: 'id', label: '工号' },
@@ -216,9 +265,27 @@ async function handleView(row: OvertimeRecord){
 };
 
 // 删除相关
-async function handleDelete(row: OvertimeRecord) {
-  await deleteOvertimeRecord({id: row.id})
+async function handleDelete(row: Employee) {
+  await deleteEmployee({id: row.id})
   getData()
+}
+
+// 编辑权限相关
+const visibleRole = ref(false);
+const roles = ref({})
+let empId = null
+async function handleEditRole(row) {
+  roles.value = await getEmployeeRoles(row.id);
+  empId = row.id;
+  visibleRole.value = true;
+}
+async function editRole(){
+  await editEmployeeRoles({
+    empId: empId,
+    roles: roles.value,
+  })
+  visibleRole.value = false;
+  await getData()
 }
 
 </script>
