@@ -52,15 +52,29 @@ export const menuData: Menus[] = [
                 id: '102-1',
                 pid: '8',
                 index: '/manager/attendance',
-                title: '全司考勤记录',
+                title: '部门考勤记录',
             },
         ],
     },
     {
         id: 'debug',
         icon: 'Lock',
-        index: '/debug',
-        title: '开发者选项'
+        index: 'debug',
+        title: '开发者选项',
+        children: [
+            {
+                id: 'debug-1',
+                pid: 'debug',
+                index: '/debug/tools',
+                title: '小工具'
+            },
+            {
+                id: 'debug-2',
+                pid: 'debug',
+                index: '/debug/attendance',
+                title: '全司考勤记录',
+            },
+        ],
     },
 //
 //========================================= 以上是我自己的 =============================================

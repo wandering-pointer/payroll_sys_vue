@@ -101,7 +101,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             //
             const keys = permiss.defaultList[param.role];
             permiss.handleSet(keys);
-            await router.push('/manager/attendance');
+            await router.push('/');
 
           }
         } catch (error) {

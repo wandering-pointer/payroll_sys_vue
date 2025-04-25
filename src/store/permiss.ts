@@ -46,11 +46,11 @@ export const usePermissStore = defineStore('permiss', {
                 '101',
                 '102',
             ],
-            ADMIN: [],
-            HR: [],
-            FINANCE: [],
-            MANAGER: ['102',],
-            EMPLOYEE: [],
+            ADMIN: ['0'],
+            HR: ['0'],
+            FINANCE: ['0'],
+            MANAGER: ['0', '102',],
+            EMPLOYEE: ['0'],
         };
         const username = localStorage.getItem('username');
         console.log(username);

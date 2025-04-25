@@ -228,12 +228,20 @@ const routes: RouteRecordRaw[] = [
 //========================================= 以下是我自己的 =============================================
 //
             {
-                path: '/debug',
+                path: '/debug/tools',
                 meta: {
-                    title: '开发者选项',
+                    title: '小工具',
                     permiss: 'debug',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_debug/developerOptions.vue'),
+            },
+            {
+                path: '/debug/attendance',
+                meta: {
+                    title: '全司考勤记录',
+                    permiss: 'debug',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_debug/_attendance.vue'),
             },
             {
                 path: '/hr/department',
@@ -270,7 +278,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/manager/attendance',
                 meta: {
-                    title: '全司考勤记录',
+                    title: '部门考勤记录',
                     permiss: '102',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/attendance.vue'),

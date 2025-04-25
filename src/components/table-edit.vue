@@ -14,6 +14,8 @@
 					</el-select>
 					<el-date-picker v-else-if="item.type === 'date'" type="date" v-model="form[item.prop]"
 						:value-format="item.format"></el-date-picker>
+          <el-date-picker v-else-if="item.type === 'datetime'" type="datetime" v-model="form[item.prop]"
+                          :value-format="item.format"></el-date-picker>
 					<el-switch v-else-if="item.type === 'switch'" v-model="form[item.prop]"
 						:active-value="item.activeValue" :inactive-value="item.inactiveValue"
 						:active-text="item.activeText" :inactive-text="item.inactiveText"></el-switch>

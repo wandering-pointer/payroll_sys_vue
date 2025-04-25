@@ -11,15 +11,13 @@
                    :currentPage="page.index"
                    :changePage="changePage"
                    :page-size="page.size">
-        <template #toolbarBtn>
-          <h3>部门：{{deptName}}</h3>
-        </template>
         <template #type="{ rows }">
           <el-tag :type="(rows.type == 'in') ? 'success' : 'primary'">
             {{ (rows.type == 'in') ? '上 班' : '下 班' }}
           </el-tag>
         </template>
       </TableCustom>
+
     </div>
     <el-dialog :title="'编辑'" v-model="EditVisible" width="700px" destroy-on-close
                :close-on-click-modal="false" @close="closeEditDialog">
@@ -36,10 +34,9 @@ import TableSearch from '@/components/table-search.vue';
 import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {
-  deleteDeptAttendance,
+  deleteAttendance,
   listAttendance,
-  listDeptAttendance,
-  updateDeptAttendance
+  updateAttendance,
 } from "@/api/forAttendance";
 import {Attendance} from "@/types/Attendance";
 import {SelectionView} from "@/types/SelectionView";
@@ -48,8 +45,6 @@ import {formatDateTime} from "@/utils/MyLittleUtils";
 
 const s_employeeSV_name = ref<SelectionView[]>([]);
 const employeeSV_name = computed(() => s_employeeSV_name.value);
-
-const deptName = ref('无数据')
 
 // 查询相关
 const query = reactive({
@@ -65,10 +60,10 @@ const searchOpt = ref<FormOptionList[]>([
 ])
 const handleSearch = async () => {
   const data = await listAttendance({
-        size: page.size,
-        index: 1,
-        attendance: query,
-      })
+    size: page.size,
+    index: 1,
+    attendance: query,
+  })
   tableData.value = data.list;
   page.total = data.total
   page.index = 1;
@@ -95,11 +90,11 @@ const page = reactive({
 const tableData = ref<Attendance[]>([]);
 const getData = async () => {
   s_employeeSV_name.value = await getEmployeeSelectionView_dept()
-  const data = await listDeptAttendance({
-        size: page.size,
-        index: page.index,
-        attendance: {},
-      })
+  const data = await listAttendance({
+    size: page.size,
+    index: page.index,
+    attendance: {},
+  })
   tableData.value = data.list;
   page.total = data.total
   return data
@@ -130,7 +125,7 @@ async function handleEdit(row: Attendance) {
 const editData = async (form: Attendance | any) => {
   closeEditDialog()
   form.time = formatDateTime(form.time)
-  await updateDeptAttendance(form)
+  await updateAttendance(form)
   getData();
 };
 
@@ -144,7 +139,7 @@ const closeAddDialog = () => {
 
 // 删除相关
 async function handleDelete(row: Attendance) {
-  await deleteDeptAttendance({id: row.id})
+  await deleteAttendance({id: row.id})
   getData()
 }
 

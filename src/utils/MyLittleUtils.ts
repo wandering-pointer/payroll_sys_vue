@@ -30,3 +30,23 @@ export const handleConfirm = (op: string, func: Function, data: any) => {
         })
         .catch(() => { });
 };
+
+export function formatDateTime(date, format = 'YYYY-MM-DDTHH:mm:ss') {
+    const padZero = (num) => num.toString().padStart(2, '0'); // 补零函数
+
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1); // 月份从 0 开始
+    const day = padZero(date.getDate());
+    const hours = padZero(date.getHours());
+    const minutes = padZero(date.getMinutes());
+    const seconds = padZero(date.getSeconds());
+
+    // 替换占位符
+    return format
+        .replace('YYYY', year)
+        .replace('MM', month)
+        .replace('DD', day)
+        .replace('HH', hours)
+        .replace('mm', minutes)
+        .replace('ss', seconds);
+}
