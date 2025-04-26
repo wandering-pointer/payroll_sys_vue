@@ -73,7 +73,7 @@ const searchOpt = ref<FormOptionList[]>([
   { prop: 'status', label: '状态', style: 'width: 100px', type: 'select', opts: [
       { value: 'pending', label: '待审核'},
       { value: 'approved', label: '已通过'},
-      { value: 'rejected', label: '已拒绝'},
+      { value: 'rejected', label: '未通过'},
     ]
   },
 ])
@@ -142,7 +142,7 @@ let options = ref<FormOption>({
     // { prop: 'status', label: '状态', type: 'select', opts: [
     //     { value: 'pending', label: '待审核'},
     //     { value: 'approved', label: '已通过'},
-    //     { value: 'rejected', label: '已拒绝'},
+    //     { value: 'rejected', label: '未通过'},
     //   ]
     // },
   ]
@@ -201,7 +201,7 @@ async function handleView(row: OvertimeRecord){
     { prop: 'status', label: '状态', isSelectionView: true, selectionView: [
           { value: 'pending', label: '待审核'},
           { value: 'approved', label: '已通过'},
-          { value: 'rejected', label: '已拒绝'},
+          { value: 'rejected', label: '未通过'},
       ]
     },
     { prop: 'notes', label: '备注' },
