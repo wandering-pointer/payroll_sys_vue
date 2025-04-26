@@ -118,7 +118,7 @@ const getData = async () => {
   const data = await listOvertimeRecord({
         size: page.size,
         index: page.index,
-        employee: {},
+        overtimeRecord: query,
       })
   tableData.value = data.list;
   page.total = data.total
