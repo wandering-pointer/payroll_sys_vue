@@ -111,7 +111,7 @@ const getData = async () => {
   const data = await listJob({
     size: page.size,
     index: page.index,
-    job: {},
+    job: query,
   })
   tableData.value = data.list;
   page.total = data.total

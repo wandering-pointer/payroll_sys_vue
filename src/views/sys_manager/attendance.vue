@@ -98,7 +98,7 @@ const getData = async () => {
   const data = await listDeptAttendance({
         size: page.size,
         index: page.index,
-        attendance: {},
+        attendance: query,
       })
   tableData.value = data.list;
   page.total = data.total

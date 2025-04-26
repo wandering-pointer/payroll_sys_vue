@@ -163,7 +163,7 @@ const getData = async () => {
   const data = await listEmployee({
     size: page.size,
     index: page.index,
-    employee: {},
+    employee: query,
   },
   null)
   tableData.value = data.list;

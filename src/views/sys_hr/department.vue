@@ -92,7 +92,7 @@ const getData = async () => {
 	const data = await listDepartment({
     size: page.size,
     index: page.index,
-    department: {},
+    department: query,
   })
 	tableData.value = data.list;
   page.total = data.total

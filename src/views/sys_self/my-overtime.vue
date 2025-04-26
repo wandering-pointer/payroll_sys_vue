@@ -115,7 +115,7 @@ const getData = async () => {
   const data = await listSelfOvertimeRecord({
         size: page.size,
         index: page.index,
-        overtimeRecord: {},
+        overtimeRecord: query,
       })
   tableData.value = data.list;
   page.total = data.total

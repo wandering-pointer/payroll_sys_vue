@@ -91,7 +91,7 @@ const getData = async () => {
 	const data = await listPolicy({
     size: page.size,
     index: page.index,
-    policy: {},
+    policy: query,
   })
 	tableData.value = data.list;
   page.total = data.total

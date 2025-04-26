@@ -89,7 +89,7 @@ const getData = async () => {
   const data = await listUserAccount({
     size: page.size,
     index: page.index,
-    userAccount: {},
+    userAccount: query,
   })
   tableData.value = data.list;
   page.total = data.total

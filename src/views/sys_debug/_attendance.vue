@@ -93,7 +93,7 @@ const getData = async () => {
   const data = await listAttendance({
     size: page.size,
     index: page.index,
-    attendance: {},
+    attendance: query,
   })
   tableData.value = data.list;
   page.total = data.total
