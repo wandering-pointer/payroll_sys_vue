@@ -91,8 +91,8 @@ const handleSearch = async () => {
 // 表格相关
 let columns = ref([
   { prop: 'id', label: '编号' },
-  { prop: 'empId', label: '工号' },
-  { prop: 'empId', label: '姓名' },
+  // { prop: 'empId', label: '工号' },
+  // { prop: 'empId', label: '姓名' },
   { prop: 'start', label: '开始时间' },
   { prop: 'end', label: '结束时间' },
   { prop: 'policyId', label: '类型', type: 'selection-view', selectionView: policy_SV },
@@ -193,8 +193,8 @@ async function handleView(row: OvertimeRecord){
   viewData.value.row = { ...row }
   viewData.value.list = [
     { prop: 'id', label: '编号' },
-    { prop: 'empId', label: '工号' },
-    { prop: 'empId', label: '姓名' },
+    // { prop: 'empId', label: '工号' },
+    // { prop: 'empId', label: '姓名' },
     { prop: 'start', label: '开始时间' },
     { prop: 'end', label: '结束时间' },
     { prop: 'policyId', label: '类型' },
