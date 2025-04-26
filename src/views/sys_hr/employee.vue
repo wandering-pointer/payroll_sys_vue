@@ -165,7 +165,7 @@ const getData = async () => {
     index: page.index,
     employee: query,
   },
-  null)
+      query.deptId)
   tableData.value = data.list;
   page.total = data.total
   return data
