@@ -31,3 +31,11 @@ export const deletePolicy = (data) => {
         data: data
     });
 };
+
+export const getPolicySelectionView = (usable: Boolean) => {
+    return request({
+        url: '/policy/selection-view',
+        method: 'get',
+        params: {usable: usable}
+    });
+};
