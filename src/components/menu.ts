@@ -94,6 +94,12 @@ export const menuData: Menus[] = [
                 index: '/debug/attendance',
                 title: '全司考勤记录',
             },
+            {
+                id: 'debug-3',
+                pid: 'debug',
+                index: '/debug/overtime',
+                title: '全司加班记录',
+            },
         ],
     },
 //
