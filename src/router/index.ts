@@ -292,6 +292,14 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/attendance.vue'),
             },
             {
+                path: '/manager/overtime',
+                meta: {
+                    title: '部门加班记录',
+                    permiss: '102',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/dept-overtime.vue'),
+            },
+            {
                 path: '/self/overtime',
                 meta: {
                     title: '个人加班记录',

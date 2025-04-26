@@ -60,6 +60,12 @@ export const menuData: Menus[] = [
                 index: '/manager/attendance',
                 title: '部门考勤记录',
             },
+            {
+                id: '102-2',
+                pid: '8',
+                index: '/manager/overtime',
+                title: '部门加班记录',
+            },
         ],
     },
     {
