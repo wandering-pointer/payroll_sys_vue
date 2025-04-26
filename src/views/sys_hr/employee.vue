@@ -76,7 +76,7 @@ import TableEdit from "@/components/table-edit.vue";
 import {deleteEmployee, insertEmployee, listEmployee, updateEmployee} from "@/api/forEmployee";
 import {Employee} from "@/types/Employee";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
-import {labelToValueLabel, SelectionView} from "@/types/SelectionView";
+import {convertToNumberIfPossible, labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
 import {editEmployeeRoles, getEmployeeRoles} from "@/api/forUserAccount";
 
@@ -199,10 +199,10 @@ const addRowData = ref({
   working: true,
 })
 async function handleEdit(row: Employee) {
-  s_departmentSV.value = await getDepartmentSelectionView(true);
-  s_jobSV_title_select.value = await getJobSelectionView('title', true);
+  s_departmentSV.value = await getDepartmentSelectionView(null);
+  s_jobSV_title_select.value = await getJobSelectionView('title', null);
 
-  const deptId = Number(jobSV_deptId.value.filter(item => item.value === row.jobId)[0].label);
+  const deptId = jobSV_deptId.value.filter(item => item.value == row.jobId)[0].label;
   const deptData = {deptId: deptId}; // 把部门名称绑定到显示上
   handleDepartmentSelected(deptId);
 
@@ -236,11 +236,13 @@ const closeAddDialog = () => {
 };
 
 // 筛选所选部门的工种
-function handleDepartmentSelected(value: number) {
+function handleDepartmentSelected(value) {
   editRowData.value.jobId = null;
   addRowData.value.jobId = null;
-  s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent === value);
+  s_jobSV_title_select.value = jobSV_title.value.filter(item => item.parent == value);
+  s_jobSV_title_select.value = convertToNumberIfPossible(s_jobSV_title_select.value)
 }
+
 
 // 查看详情弹窗相关
 const visible1 = ref(false);

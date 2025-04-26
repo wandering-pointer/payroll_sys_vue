@@ -56,7 +56,7 @@ import TableEdit from "@/components/table-edit.vue";
 import {deleteJob, insertJob, listJob, updateJob} from "@/api/forJob";
 import {Job} from "@/types/Job";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
-import {SelectionView} from "@/types/SelectionView";
+import {convertToNumberIfPossible, SelectionView} from "@/types/SelectionView";
 
 // 使用响应式引用
 const departmentSelectionView = ref<SelectionView[]>([]);
@@ -107,6 +107,7 @@ const page = reactive({
 const tableData = ref<Job[]>([]);
 const getData = async () => {
   departmentSelectionView.value = await getDepartmentSelectionView(null);
+  //console.log(departmentSelectionView.value);
   const data = await listJob({
     size: page.size,
     index: page.index,
@@ -142,9 +143,11 @@ const addRowData = ref({
   usable: true,
 })
 const handleEdit = async (row: Job) => {
-  departmentSelectionView.value = await getDepartmentSelectionView(true);
+  departmentSelectionView.value = await getDepartmentSelectionView(null);
+  departmentSelectionView.value =  convertToNumberIfPossible(departmentSelectionView.value)
   editRowData.value = {...row};
   EditVisible.value = true;
+  //console.log(departmentSelectionView.value);
 };
 const editData = async (form: Job) => {
   closeEditDialog()

@@ -1,7 +1,7 @@
 export interface SelectionView {
-    label: string;
-    value: any;
-    parent: string;
+    label: string | number;
+    value: string | number;
+    parent: string | number;
 }
 
 // 映射函数
@@ -14,7 +14,7 @@ export function formatSelectionView(list, value){
 // list2元素的label（数字）指向list1元素的value，将list2元素的label替换为其所对应的list1元素中value对应的label
 export function labelToValueLabel(list1: SelectionView[], list2: SelectionView[]): SelectionView[] {
     // 创建一个映射表，方便快速查找 list1 中的元素
-    const valueToLabelMap = new Map<any, string>();
+    const valueToLabelMap = new Map<any, string | number>();
     for (const item of list1) {
         valueToLabelMap.set(item.value, item.label);
     }
@@ -29,4 +29,19 @@ export function labelToValueLabel(list1: SelectionView[], list2: SelectionView[]
     });
 
     return updatedList2;
+}
+
+export function convertToNumberIfPossible(selectionViews: SelectionView[]): SelectionView[] {
+    return selectionViews.map(view => {
+        const convertIfPossible = (value: string | number): string | number => {
+            if (typeof value === 'string' && !isNaN(Number(value))) {
+                return Number(value);
+            }
+            return value;
+        };
+        view.label = convertIfPossible(view.label);
+        view.value = convertIfPossible(view.value);
+        view.parent = convertIfPossible(view.parent);
+        return view;
+    });
 }
