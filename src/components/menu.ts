@@ -76,7 +76,13 @@ export const menuData: Menus[] = [
         children: [
             {
                 id: '103-1',
-                pid: '8',
+                pid: '9',
+                index: '/self/attendance',
+                title: '个人考勤记录',
+            },
+            {
+                id: '103-2',
+                pid: '9',
                 index: '/self/overtime',
                 title: '个人加班记录',
             },

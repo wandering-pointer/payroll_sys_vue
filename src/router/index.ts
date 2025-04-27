@@ -289,7 +289,7 @@ const routes: RouteRecordRaw[] = [
                     title: '部门考勤记录',
                     permiss: '102',
                 },
-                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/attendance.vue'),
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/dept-attendance.vue'),
             },
             {
                 path: '/manager/overtime',
@@ -314,6 +314,14 @@ const routes: RouteRecordRaw[] = [
                     permiss: 'debug',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '@/views/sys_debug/_overtime.vue'),
+            },
+            {
+                path: '/self/attendance',
+                meta: {
+                    title: '个人考勤记录',
+                    permiss: '103',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/my-attendance.vue'),
             },
 //
 //========================================= 以上是我自己的 =============================================

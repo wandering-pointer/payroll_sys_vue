@@ -32,6 +32,14 @@ export const deleteAttendance = (data) => {
     });
 };
 
+export const listSelfAttendance = (data) => {
+    return request({
+        url: '/attendance/self/list',
+        method: 'post',
+        data: data
+    });
+};
+
 export const listDeptAttendance = (data) => {
     return request({
         url: '/attendance/dept/list',
