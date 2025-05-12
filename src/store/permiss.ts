@@ -46,10 +46,11 @@ export const usePermissStore = defineStore('permiss', {
                 '101',
                 '102',
                 '103',
+                '104',
             ],
             ADMIN: ['0'],
             HR: ['0'],
-            FINANCE: ['0'],
+            FINANCE: ['0', '104'],
             MANAGER: ['0', '102',],
             EMPLOYEE: ['0','103',],
         };

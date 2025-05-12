@@ -323,6 +323,14 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/my-attendance.vue'),
             },
+            {
+                path: '/finance/check',
+                meta: {
+                    title: '工资核算',
+                    permiss: '104',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_finance/check-salary.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //

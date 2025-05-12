@@ -89,6 +89,20 @@ export const menuData: Menus[] = [
         ],
     },
     {
+        id: '104',
+        icon: 'DataLine',
+        index: '10',
+        title: '财务人员功能',
+        children: [
+            {
+                id: '104-1',
+                pid: '10',
+                index: '/finance/check',
+                title: '工资核算',
+            },
+        ],
+    },
+    {
         id: 'debug',
         icon: 'Lock',
         index: 'debug',
