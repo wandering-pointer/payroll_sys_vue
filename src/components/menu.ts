@@ -100,6 +100,12 @@ export const menuData: Menus[] = [
                 index: '/finance/check',
                 title: '工资核算',
             },
+            {
+                id: '104-2',
+                pid: '10',
+                index: '/finance/history',
+                title: '历史工资查看',
+            },
         ],
     },
     {

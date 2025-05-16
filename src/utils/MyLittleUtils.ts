@@ -50,3 +50,7 @@ export function formatDateTime(date, format = 'YYYY-MM-DDTHH:mm:ss') {
         .replace('mm', minutes)
         .replace('ss', seconds);
 }
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

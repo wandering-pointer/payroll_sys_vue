@@ -6,19 +6,15 @@
                    :tableData="tableData"
                    :total="page.total"
                    :viewFunc="handleView"
-				           :delFunc="handleDelete"
                    :editFunc="handleEdit"
                    :refresh="getData"
                    :currentPage="page.index"
                    :changePage="changePage"
                    :page-size="page.size">
 				<template #toolbarBtn>
-					<el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增</el-button>
-				</template>
-				<template #usable="{ rows }">
-					<el-tag :type="rows.usable ? 'success' : 'danger'">
-						{{ rows.usable ? '正 常' : '禁 用' }}
-					</el-tag>
+          <el-button type="warning" @click="handleCalc">计算该月工资</el-button>
+          <el-button type="success" @click="">核算通过</el-button>
+          <el-button type="danger" @click="">全部撤销</el-button>
 				</template>
 			</TableCustom>
 
@@ -28,20 +24,12 @@
 			<TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData">
 			</TableEdit>
 		</el-dialog>
-    <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close
-               :close-on-click-modal="false" @close="closeAddDialog">
-      <TableEdit :form-data="addRowData" :options="options" :edit=true :update="insertData">
-      </TableEdit>
-    </el-dialog>
 		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-			<TableDetail :data="viewData">
-        <template #usable="{ rows }">
-          <el-tag :type="rows.usable ? 'success' : 'danger'">
-            {{ rows.usable ? '正 常' : '禁 用' }}
-          </el-tag>
-        </template>
-			</TableDetail>
 		</el-dialog>
+    <el-dialog title="计算工资" v-model="calculateVisible" width="700px" destroy-on-close @close="handleCalcClose">
+      <h3 style="text-align: center">{{calcResult}}</h3>
+      <el-button type="warning" @click="handleCalc">点我刷新</el-button>
+    </el-dialog>
 	</div>
 </template>
 
@@ -53,22 +41,37 @@ import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
-import {deleteDepartment, insertDepartment, listDepartment, updateDepartment} from "@/api/forDepartment";
-import {Department} from "@/types/Department";
+import {
+  calculateMonthlySalary,
+  deleteMonthlySalary,
+  insertMonthlySalary,
+  listMonthlySalary,
+  updateMonthlySalary
+} from "@/api/forMonthlySalary";
+import {MonthlySalary} from "@/types/MonthlySalary";
+import {ElMessage} from "element-plus";
 
 // 查询相关
 const query = reactive({
-	name: '',
+  year: '未选择',
+  month: '未选择',
 });
+const years = generateYearsSelectionView()
 const searchOpt = ref<FormOptionList[]>([
-  { type: 'input', label: '部门名称：', prop: 'name' },
-  { type: 'input', label: '部门编号：', prop: 'id' },
+  { prop: 'year', label: '年份', type: 'select', style: 'width: 100px', opts: years },
+  { prop: 'month', label: '月份', type: 'select', style: 'width: 100px', opts: [
+      { label: '1', value: '01' },{ label: '2', value: '02' },{ label: '3', value: '03' },{ label: '4', value: '04' },
+      { label: '5', value: '05' },{ label: '6', value: '06' },{ label: '7', value: '07' },{ label: '8', value: '08' },
+      { label: '9', value: '09' },{ label: '10', value: '10' },{ label: '11', value: '11' },{ label: '12', value: '12' },
+    ]
+  },
 ])
 const handleSearch = async () => {
-  const data = await listDepartment({
+  const yearMonth = `${query.year}-${query.month}-01`;
+  const data = await listMonthlySalary({
     size: page.size,
     index: 1,
-    department: query,
+    monthlySalary: {yearMonth: yearMonth},
   })
   tableData.value = data.list;
   page.total = data.total
@@ -77,22 +80,35 @@ const handleSearch = async () => {
 
 // 表格相关
 let columns = ref([
-	{ prop: 'id', label: '部门编号' },
-	{ prop: 'name', label: '部门名称' },
-	{ prop: 'usable', label: '状态' },
-	{ prop: 'operator', label: '操作', width: 250 },
+	{ prop: 'id', label: '编号' },
+	{ prop: 'empId', label: '工号' },
+  { prop: 'baseSalary', label: '基本工资(含等级加成)' },
+  { prop: 'allowanceTotal', label: '加班津贴' },
+  { prop: 'attendanceDeduction', label: '缺勤扣款' },
+  { prop: 'tax', label: '缴税' },
+  { prop: 'otherSources', label: '其他补扣' },
+  { prop: 'salary', label: '应发工资' },
+  { prop: 'operator', label: '操作', width: 350, type: 'open-button', btnInfo: [
+      {label: '查看备注', type: 'warning', icon: 'View', handler: handleView },
+      {label: '编辑备注', type: 'primary', icon: 'Edit', handler: handleEdit },
+    ]
+  }
 ])
 const page = reactive({
 	index: 1,
 	size: 10,
 	total: 0,
 })
-const tableData = ref<Department[]>([]);
+const tableData = ref<MonthlySalary[]>([]);
 const getData = async () => {
-	const data = await listDepartment({
+  var yearMonth = null;
+  if (query.year != '未选择' && query.month != '未选择') {
+    yearMonth = `${query.year}-${query.month}-01`
+  }
+	const data = await listMonthlySalary({
     size: page.size,
     index: page.index,
-    department: query,
+    monthlySalary: {yearMonth: yearMonth},
   })
 	tableData.value = data.list;
   page.total = data.total
@@ -116,34 +132,19 @@ let options = ref<FormOption>({
 	]
 })
 const EditVisible = ref(false);
-const AddVisible = ref(false);
 const editRowData = ref({});
-const addRowData = ref({
-  usable: true,
-  name: ''
-})
-const handleEdit = (row: Department) => {
+function handleEdit(row: MonthlySalary) {
 	editRowData.value = { ...row };
 	EditVisible.value = true;
 };
-const editData = async (form: Department) => {
+const editData = async (form: MonthlySalary) => {
 	closeEditDialog()
-  await updateDepartment(form)
+  await updateMonthlySalary(form)
 	getData();
-};
-
-const insertData = async (form: Department) => {
-  closeAddDialog()
-  await insertDepartment(form)
-  getData();
 };
 
 const closeEditDialog = () => {
 	EditVisible.value = false;
-};
-
-const closeAddDialog = () => {
-  AddVisible.value = false;
 };
 
 // 查看详情弹窗相关
@@ -152,7 +153,7 @@ const viewData = ref({
 	row: {},
 	list: []
 });
-const handleView = (row: Department) => {
+function handleView (row: MonthlySalary) {
 	viewData.value.row = { ...row }
 	viewData.value.list = [
     { prop: 'id', label: '部门编号' },
@@ -160,14 +161,36 @@ const handleView = (row: Department) => {
     { prop: 'usable', label: '状态' },
 	]
 	visible1.value = true;
-};
-
-// 删除相关
-const handleDelete = async (row: Department) => {
-  const data = await deleteDepartment({id: row.id})
-  page.index = 1
-  getData()
 }
+
+// 计算工资相关
+const calculateVisible = ref(false)
+var calcResult = ref("未知")
+async function handleCalc() {
+  if (query.year == '未选择' || query.month == '未选择') {
+    ElMessage.error("未选择时间")
+    return
+  }
+  var date = query.year + '-' + query.month
+  calcResult.value = await calculateMonthlySalary({date: date})
+  if(calcResult.value == '0'){
+    calculateVisible.value = false
+    await handleSearch()
+    return
+  }
+  calculateVisible.value = true
+}
+function handleCalcClose(){
+  calculateVisible.value = false
+}
+ function generateYearsSelectionView(){
+  var res = []
+  for(var i = 2025; i > 2020; i--){
+    res.push({ label: String(i), value: String(i) })
+  }
+  return res
+}
+
 </script>
 
 <style scoped>
