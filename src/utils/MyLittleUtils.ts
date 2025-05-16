@@ -20,8 +20,8 @@ export async function showMessage(res) {
     }
 }
 
-//询问是否继续进行op操作，然后执行func(data)
-export const handleConfirm = (op: string, func: Function, data: any) => {
+//询问是否继续进行op操作，然后执行func(data)  === 以后一定要直接改成异步的
+export const handleConfirm = async (op: string, func: Function, data: any) => {
     ElMessageBox.confirm(`确定要${op}吗？`, '提示', {
         type: 'warning'
     })

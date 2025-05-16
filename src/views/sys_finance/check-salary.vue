@@ -13,9 +13,14 @@
                    :page-size="page.size">
 				<template #toolbarBtn>
           <el-button type="warning" @click="handleCalc">计算该月工资</el-button>
-          <el-button type="success" @click="">核算通过</el-button>
-          <el-button type="danger" @click="">全部撤销</el-button>
+          <el-button type="success" @click="handelPass">核算通过</el-button>
+          <el-button type="danger" @click="handelUndo">全部撤销</el-button>
 				</template>
+        <template #checked="{ rows }">
+          <el-tag :type="rows.checked ? 'success' : 'danger'">
+            {{ rows.checked ? '已通过' : '未通过' }}
+          </el-tag>
+        </template>
 			</TableCustom>
 
 		</div>
@@ -28,7 +33,7 @@
 		</el-dialog>
     <el-dialog title="计算工资" v-model="calculateVisible" width="700px" destroy-on-close @close="handleCalcClose">
       <h3 style="text-align: center">{{calcResult}}</h3>
-      <el-button type="warning" @click="handleCalc">点我刷新</el-button>
+      <el-button type="warning" @click="handleCalc" style="text-align: center">点我刷新</el-button>
     </el-dialog>
 	</div>
 </template>
@@ -43,18 +48,19 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {
   calculateMonthlySalary,
-  deleteMonthlySalary,
   insertMonthlySalary,
-  listMonthlySalary,
+  listMonthlySalary, passMonthlySalary, undoMonthlySalary,
   updateMonthlySalary
 } from "@/api/forMonthlySalary";
 import {MonthlySalary} from "@/types/MonthlySalary";
 import {ElMessage} from "element-plus";
+import {handleConfirm} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
   year: '未选择',
   month: '未选择',
+  empId: '',
 });
 const years = generateYearsSelectionView()
 const searchOpt = ref<FormOptionList[]>([
@@ -65,13 +71,20 @@ const searchOpt = ref<FormOptionList[]>([
       { label: '9', value: '09' },{ label: '10', value: '10' },{ label: '11', value: '11' },{ label: '12', value: '12' },
     ]
   },
+  { prop: 'empId', label: '工号', type: 'input', placeholder: '全匹配' },
 ])
 const handleSearch = async () => {
-  const yearMonth = `${query.year}-${query.month}-01`;
+  var yearMonth
+  if (query.year == '未选择' || query.month == '未选择') {
+    yearMonth = null;
+  }
+  else{
+    yearMonth = `${query.year}-${query.month}-01`;
+  }
   const data = await listMonthlySalary({
     size: page.size,
     index: 1,
-    monthlySalary: {yearMonth: yearMonth},
+    monthlySalary: {yearMonth: yearMonth, empId: query.empId},
   })
   tableData.value = data.list;
   page.total = data.total
@@ -88,9 +101,10 @@ let columns = ref([
   { prop: 'tax', label: '缴税' },
   { prop: 'otherSources', label: '其他补扣' },
   { prop: 'salary', label: '应发工资' },
-  { prop: 'operator', label: '操作', width: 350, type: 'open-button', btnInfo: [
+  { prop: 'checked', label: '状态' },
+  { prop: 'operator', label: '操作', width: 250, type: 'open-button', btnInfo: [
       {label: '查看备注', type: 'warning', icon: 'View', handler: handleView },
-      {label: '编辑备注', type: 'primary', icon: 'Edit', handler: handleEdit },
+      {label: '补扣备注', type: 'primary', icon: 'Edit', handler: handleEdit },
     ]
   }
 ])
@@ -189,6 +203,34 @@ function handleCalcClose(){
     res.push({ label: String(i), value: String(i) })
   }
   return res
+}
+
+// 撤销相关
+function handelUndo() {
+  if (query.year == '未选择' || query.month == '未选择') {
+    ElMessage.error("未选择时间")
+    return
+  }
+  const date = query.year + '-' + query.month;
+  handleConfirm("撤销", handleUndoMonthlySalary, {date: date})
+}
+async function handleUndoMonthlySalary(date){
+  await undoMonthlySalary(date)
+  getData()
+}
+
+// 审核通过相关
+function handelPass(){
+  if (query.year == '未选择' || query.month == '未选择') {
+    ElMessage.error("未选择时间")
+    return
+  }
+  const date = query.year + '-' + query.month;
+  handleConfirm("通过", handlePassMonthlySalary, {date: date})
+}
+async function handlePassMonthlySalary(date) {
+  await passMonthlySalary(date)
+  getData()
 }
 
 </script>

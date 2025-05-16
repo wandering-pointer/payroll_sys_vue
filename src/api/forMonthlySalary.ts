@@ -24,18 +24,27 @@ export const insertMonthlySalary = (data) => {
     });
 };
 
-export const deleteMonthlySalary = (data) => {
-    return request({
-        url: '/monthlySalary/delete',
-        method: 'post',
-        data: data
-    });
-};
-
 export const calculateMonthlySalary = (data) => {
     return request({
         url: '/monthlySalary/calculate',
         method: 'get',
+        params: data
+    });
+};
+
+export const undoMonthlySalary = (data) => {
+    return request({
+        url: '/monthlySalary/undo',
+        method: 'get',
+        params: data
+    });
+};
+
+export const passMonthlySalary = (data) => {
+    return request({
+        url: '/monthlySalary/pass',
+        method: 'post',
+        data: {},
         params: data
     });
 };
