@@ -339,6 +339,22 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_finance/history-salary.vue'),
             },
+            {
+                path: '/manager/salary',
+                meta: {
+                    title: '部门工资记录',
+                    permiss: '102',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/dept-salary.vue'),
+            },
+            {
+                path: '/self/salary',
+                meta: {
+                    title: '个人工资记录',
+                    permiss: '103',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/delf-salary.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //

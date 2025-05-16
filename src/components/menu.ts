@@ -66,6 +66,12 @@ export const menuData: Menus[] = [
                 index: '/manager/overtime',
                 title: '部门加班记录',
             },
+            {
+                id: '102-3',
+                pid: '8',
+                index: '/manager/salary',
+                title: '部门工资记录',
+            },
         ],
     },
     {
@@ -85,6 +91,12 @@ export const menuData: Menus[] = [
                 pid: '9',
                 index: '/self/overtime',
                 title: '个人加班记录',
+            },
+            {
+                id: '103-3',
+                pid: '9',
+                index: '/self/salary',
+                title: '个人工资记录',
             },
         ],
     },

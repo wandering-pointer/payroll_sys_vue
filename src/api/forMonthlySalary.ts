@@ -8,6 +8,22 @@ export const listMonthlySalary = (data) => {
     });
 };
 
+export const listDeptMonthlySalary = (data) => {
+    return request({
+        url: '/monthlySalary/list/dept',
+        method: 'post',
+        data: data
+    });
+};
+
+export const listSelfMonthlySalary = (data) => {
+    return request({
+        url: '/monthlySalary/list/self',
+        method: 'post',
+        data: data
+    });
+};
+
 export const updateMonthlySalary = (data) => {
     return request({
         url: '/monthlySalary/update',
