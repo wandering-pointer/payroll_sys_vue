@@ -5,8 +5,6 @@
 			<TableCustom :columns="columns"
                    :tableData="tableData"
                    :total="page.total"
-                   :viewFunc="handleView"
-                   :editFunc="handleEdit"
                    :refresh="getData"
                    :currentPage="page.index"
                    :changePage="changePage"
@@ -30,6 +28,7 @@
 			</TableEdit>
 		</el-dialog>
 		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
+      <TableDetail :data="viewData"/>
 		</el-dialog>
     <el-dialog title="计算工资" v-model="calculateVisible" width="700px" destroy-on-close @close="handleCalcClose">
       <h3 style="text-align: center">{{calcResult}}</h3>
@@ -135,14 +134,13 @@ const changePage = (val: number) => {
 	getData();
 };
 
-// 新增/编辑弹窗相关
+// 编辑弹窗相关
 let options = ref<FormOption>({
 	labelWidth: '100px',
 	span: 24,
 	list: [
-		{ type: 'input', label: '部门编号', prop: 'id', disabled: true, placeholder: '系统自动分配'},
-		{ type: 'input', label: '部门名称', prop: 'name', required: true },
-		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'usable'},
+		{ type: 'input', label: '补扣', prop: 'otherSources' },
+		{ type: 'input', label: '备注', prop: 'notes' },
 	]
 })
 const EditVisible = ref(false);
@@ -170,9 +168,7 @@ const viewData = ref({
 function handleView (row: MonthlySalary) {
 	viewData.value.row = { ...row }
 	viewData.value.list = [
-    { prop: 'id', label: '部门编号' },
-    { prop: 'name', label: '部门名称' },
-    { prop: 'usable', label: '状态' },
+    { prop: 'notes', label: '备注' },
 	]
 	visible1.value = true;
 }
