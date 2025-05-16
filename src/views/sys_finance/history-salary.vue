@@ -1,74 +1,87 @@
 <template>
-	<div>
-		<TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
-		<div class="container">
-			<TableCustom :columns="columns"
+  <div>
+    <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
+    <div class="container">
+      <TableCustom :columns="columns"
                    :tableData="tableData"
                    :total="page.total"
-                   :viewFunc="handleView"
-				           :delFunc="handleDelete"
-                   :editFunc="handleEdit"
                    :refresh="getData"
                    :currentPage="page.index"
                    :changePage="changePage"
                    :page-size="page.size">
-				<template #toolbarBtn>
-					<el-button type="warning" :icon="CirclePlusFilled" @click="AddVisible = true">新增</el-button>
-				</template>
-				<template #usable="{ rows }">
-					<el-tag :type="rows.usable ? 'success' : 'danger'">
-						{{ rows.usable ? '正 常' : '禁 用' }}
-					</el-tag>
-				</template>
-			</TableCustom>
-
-		</div>
-		<el-dialog :title="'编辑'" v-model="EditVisible" width="700px" destroy-on-close
-               :close-on-click-modal="false" @close="closeEditDialog">
-			<TableEdit :form-data="editRowData" :options="options" :edit=true :update="editData">
-			</TableEdit>
-		</el-dialog>
-    <el-dialog :title="'新增'" v-model="AddVisible" width="700px" destroy-on-close
-               :close-on-click-modal="false" @close="closeAddDialog">
-      <TableEdit :form-data="addRowData" :options="options" :edit=true :update="insertData">
-      </TableEdit>
-    </el-dialog>
-		<el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-			<TableDetail :data="viewData">
-        <template #usable="{ rows }">
-          <el-tag :type="rows.usable ? 'success' : 'danger'">
-            {{ rows.usable ? '正 常' : '禁 用' }}
-          </el-tag>
+        <template #toolbarBtn>
         </template>
-			</TableDetail>
-		</el-dialog>
-	</div>
+      </TableCustom>
+
+    </div>
+    <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
+      <TableDetail :data="viewData"/>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts" name="basetable">
-import { ref, reactive } from 'vue';
-import { CirclePlusFilled } from '@element-plus/icons-vue';
+import {ref, reactive, computed} from 'vue';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
 import TableSearch from '@/components/table-search.vue';
 import { FormOption, FormOptionList } from '@/types/form-option';
-import TableEdit from "@/components/table-edit.vue";
-import {deleteDepartment, insertDepartment, listDepartment, updateDepartment} from "@/api/forDepartment";
-import {Department} from "@/types/Department";
+import {
+  calculateMonthlySalary,
+  listMonthlySalary, passMonthlySalary, undoMonthlySalary,
+  updateMonthlySalary
+} from "@/api/forMonthlySalary";
+import {MonthlySalary} from "@/types/MonthlySalary";
+import {ElMessage} from "element-plus";
+import {handleConfirm} from "@/utils/MyLittleUtils";
+import {getEmployeeSelectionView} from "@/api/forEmployee";
+import {SelectionView} from "@/types/SelectionView";
+import {getDepartmentSelectionView} from "@/api/forDepartment";
+
+const s_departmentSV = ref<SelectionView[]>([]);
+const departmentSV = computed(() => s_departmentSV.value);
+
+const s_empSV = ref<SelectionView[]>([]);
+const empSV = computed(() => s_empSV.value);
+
+async function getSVs() {
+  s_empSV.value = await getEmployeeSelectionView();
+  s_departmentSV.value = await getDepartmentSelectionView(null);
+}
+getSVs()
 
 // 查询相关
 const query = reactive({
-	name: '',
+  year: '未选择',
+  month: '未选择',
+  empId: '',
+  deptId: undefined,
 });
+const years = generateYearsSelectionView()
 const searchOpt = ref<FormOptionList[]>([
-  { type: 'input', label: '部门名称：', prop: 'name' },
-  { type: 'input', label: '部门编号：', prop: 'id' },
+  { prop: 'year', label: '年份', type: 'select', style: 'width: 100px', opts: years },
+  { prop: 'month', label: '月份', type: 'select', style: 'width: 100px', opts: [
+      { label: '1', value: '01' },{ label: '2', value: '02' },{ label: '3', value: '03' },{ label: '4', value: '04' },
+      { label: '5', value: '05' },{ label: '6', value: '06' },{ label: '7', value: '07' },{ label: '8', value: '08' },
+      { label: '9', value: '09' },{ label: '10', value: '10' },{ label: '11', value: '11' },{ label: '12', value: '12' },
+    ]
+  },
+  { prop: 'empId', label: '工号', type: 'input', placeholder: '全匹配' },
+  { prop: 'deptId', label: '所属部门', type: 'select', opts: departmentSV, style: 'width: 150px' },
 ])
 const handleSearch = async () => {
-  const data = await listDepartment({
+  var yearMonth
+  if (query.year == '未选择' || query.month == '未选择') {
+    yearMonth = null;
+  }
+  else{
+    yearMonth = `${query.year}-${query.month}-01`;
+  }
+  const data = await listMonthlySalary({
     size: page.size,
     index: 1,
-    department: query,
+    monthlySalary: {yearMonth: yearMonth, empId: query.empId},
+    deptId: query.deptId,
   })
   tableData.value = data.list;
   page.total = data.total
@@ -77,104 +90,76 @@ const handleSearch = async () => {
 
 // 表格相关
 let columns = ref([
-	{ prop: 'id', label: '部门编号' },
-	{ prop: 'name', label: '部门名称' },
-	{ prop: 'usable', label: '状态' },
-	{ prop: 'operator', label: '操作', width: 250 },
+  { prop: 'id', label: '编号' },
+  { prop: 'empId', label: '工号' },
+  { prop: 'empId', label: '姓名', type: 'selection-view', selectionView: empSV },
+  { prop: 'baseSalary', label: '基本工资(含等级加成)' },
+  { prop: 'allowanceTotal', label: '加班津贴' },
+  { prop: 'attendanceDeduction', label: '缺勤扣款' },
+  { prop: 'tax', label: '缴税' },
+  { prop: 'otherSources', label: '其他补扣' },
+  { prop: 'salary', label: '应发工资' },
+  { prop: 'operator', label: '操作', width: 120, type: 'open-button', btnInfo: [
+      {label: '查看备注', type: 'warning', icon: 'View', handler: handleView },
+    ]
+  }
 ])
 const page = reactive({
-	index: 1,
-	size: 10,
-	total: 0,
+  index: 1,
+  size: 10,
+  total: 0,
 })
-const tableData = ref<Department[]>([]);
+const tableData = ref<MonthlySalary[]>([]);
 const getData = async () => {
-	const data = await listDepartment({
+  var yearMonth = null;
+  if (query.year != '未选择' && query.month != '未选择') {
+    yearMonth = `${query.year}-${query.month}-01`
+  }
+  const data = await listMonthlySalary({
     size: page.size,
     index: page.index,
-    department: query,
+    monthlySalary: {yearMonth: yearMonth},
   })
-	tableData.value = data.list;
+  tableData.value = data.list;
   page.total = data.total
   return data
 };
 getData();
 
 const changePage = (val: number) => {
-	page.index = val;
-	getData();
-};
-
-// 新增/编辑弹窗相关
-let options = ref<FormOption>({
-	labelWidth: '100px',
-	span: 24,
-	list: [
-		{ type: 'input', label: '部门编号', prop: 'id', disabled: true, placeholder: '系统自动分配'},
-		{ type: 'input', label: '部门名称', prop: 'name', required: true },
-		{ type: 'switch', activeText: '正常', inactiveText: '禁用', label: '状态', prop: 'usable'},
-	]
-})
-const EditVisible = ref(false);
-const AddVisible = ref(false);
-const editRowData = ref({});
-const addRowData = ref({
-  usable: true,
-  name: ''
-})
-const handleEdit = (row: Department) => {
-	editRowData.value = { ...row };
-	EditVisible.value = true;
-};
-const editData = async (form: Department) => {
-	closeEditDialog()
-  await updateDepartment(form)
-	getData();
-};
-
-const insertData = async (form: Department) => {
-  closeAddDialog()
-  await insertDepartment(form)
+  page.index = val;
   getData();
-};
-
-const closeEditDialog = () => {
-	EditVisible.value = false;
-};
-
-const closeAddDialog = () => {
-  AddVisible.value = false;
 };
 
 // 查看详情弹窗相关
 const visible1 = ref(false);
 const viewData = ref({
-	row: {},
-	list: []
+  row: {},
+  list: []
 });
-const handleView = (row: Department) => {
-	viewData.value.row = { ...row }
-	viewData.value.list = [
-    { prop: 'id', label: '部门编号' },
-    { prop: 'name', label: '部门名称' },
-    { prop: 'usable', label: '状态' },
-	]
-	visible1.value = true;
-};
-
-// 删除相关
-const handleDelete = async (row: Department) => {
-  const data = await deleteDepartment({id: row.id})
-  page.index = 1
-  getData()
+function handleView (row: MonthlySalary) {
+  viewData.value.row = { ...row }
+  viewData.value.list = [
+    { prop: 'notes', label: '备注' },
+  ]
+  visible1.value = true;
 }
+
+function generateYearsSelectionView(){
+  var res = []
+  for(var i = 2025; i > 2020; i--){
+    res.push({ label: String(i), value: String(i) })
+  }
+  return res
+}
+
 </script>
 
 <style scoped>
 .table-td-thumb {
-	display: block;
-	margin: auto;
-	width: 40px;
-	height: 40px;
+  display: block;
+  margin: auto;
+  width: 40px;
+  height: 40px;
 }
 </style>
