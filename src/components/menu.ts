@@ -118,6 +118,12 @@ export const menuData: Menus[] = [
                 index: '/finance/history',
                 title: '历史工资查看',
             },
+            {
+                id: '104-3',
+                pid: '10',
+                index: '/finance/bonds',
+                title: '年终奖管理',
+            },
         ],
     },
     {

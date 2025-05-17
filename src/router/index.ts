@@ -355,6 +355,14 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/delf-salary.vue'),
             },
+            {
+                path: '/finance/bonds',
+                meta: {
+                    title: '年终奖管理',
+                    permiss: '104',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_finance/check-bonds.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //
