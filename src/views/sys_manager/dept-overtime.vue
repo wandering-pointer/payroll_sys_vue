@@ -59,7 +59,7 @@ import {OvertimeRecord} from "@/types/OvertimeRecord";
 import {convertToNumberIfPossible, labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getPolicySelectionView} from "@/api/forPolicy";
 import {formatDateTime} from "@/utils/MyLittleUtils";
-import {getCurrentUserDeptName, getEmployeeSelectionView} from "@/api/forEmployee";
+import {getCurrentUserDeptName, getEmployeeSelectionView, getEmployeeSelectionView_dept} from "@/api/forEmployee";
 
 const deptName = ref('无数据')
 const policy_SV = ref<SelectionView[]>([]);
@@ -116,7 +116,7 @@ const page = reactive({
 const tableData = ref<OvertimeRecord[]>([]);
 const getData = async () => {
   policy_SV.value = await getPolicySelectionView(null)
-  employee_SV.value = await getEmployeeSelectionView()
+  employee_SV.value = await getEmployeeSelectionView_dept()
   const data = await listDeptOvertimeRecord({
         size: page.size,
         index: page.index,

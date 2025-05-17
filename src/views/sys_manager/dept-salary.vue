@@ -35,7 +35,7 @@ import {
 import {MonthlySalary} from "@/types/MonthlySalary";
 import {ElMessage} from "element-plus";
 import {handleConfirm} from "@/utils/MyLittleUtils";
-import {getCurrentUserDeptName, getEmployeeSelectionView} from "@/api/forEmployee";
+import {getCurrentUserDeptName, getEmployeeSelectionView, getEmployeeSelectionView_dept} from "@/api/forEmployee";
 import {SelectionView} from "@/types/SelectionView";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
 
@@ -45,7 +45,7 @@ const s_empSV = ref<SelectionView[]>([]);
 const empSV = computed(() => s_empSV.value);
 
 async function getStaticData() {
-  s_empSV.value = await getEmployeeSelectionView();
+  s_empSV.value = await getEmployeeSelectionView_dept();
   deptName.value = await getCurrentUserDeptName()
 }
 getStaticData()
