@@ -72,6 +72,12 @@ export const menuData: Menus[] = [
                 index: '/manager/salary',
                 title: '部门工资记录',
             },
+            {
+                id: '102-4',
+                pid: '8',
+                index: '/manager/bonds',
+                title: '部门年终奖记录',
+            },
         ],
     },
     {
@@ -97,6 +103,12 @@ export const menuData: Menus[] = [
                 pid: '9',
                 index: '/self/salary',
                 title: '个人工资记录',
+            },
+            {
+                id: '103-4',
+                pid: '9',
+                index: '/self/bonds',
+                title: '个人年终奖记录',
             },
         ],
     },

@@ -363,6 +363,22 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_finance/check-bonds.vue'),
             },
+            {
+                path: '/manager/bonds',
+                meta: {
+                    title: '部门年终奖记录',
+                    permiss: '102',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_manager/dept-bonds.vue'),
+            },
+            {
+                path: '/self/bonds',
+                meta: {
+                    title: '个人年终奖记录',
+                    permiss: '103',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/delf-bonds.vue'),
+            },
 //
 //========================================= 以上是我自己的 =============================================
 //
