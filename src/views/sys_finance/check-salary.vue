@@ -10,9 +10,27 @@
                    :changePage="changePage"
                    :page-size="page.size">
 				<template #toolbarBtn>
-          <el-button type="warning" @click="handleCalc">计算该月工资</el-button>
-          <el-button type="success" @click="handelPass">核算通过</el-button>
-          <el-button type="danger" @click="handelUndo">全部撤销</el-button>
+          <div style="flex-wrap: wrap; display: flex; align-items: center; gap: 1rem;">
+            <el-select placeholder="选择年份"  v-model="calcYear" style="width: 100px;">
+              <el-option
+                  v-for="item in years"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+            <el-select placeholder="选择月份"  v-model="calcMonth" style="width: 100px;">
+              <el-option
+                  v-for="item in months"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+            <el-button type="warning" @click="handleCalc">计算该月工资</el-button>
+            <el-button type="success" @click="handelPass">核算通过</el-button>
+            <el-button type="danger" @click="handelUndo">全部撤销</el-button>
+          </div>
 				</template>
         <template #checked="{ rows }">
           <el-tag :type="rows.checked ? 'success' : 'danger'">
@@ -55,26 +73,30 @@ import {MonthlySalary} from "@/types/MonthlySalary";
 import {ElMessage} from "element-plus";
 import {handleConfirm} from "@/utils/MyLittleUtils";
 
+const calcYear = ref('')
+const calcMonth = ref('')
+
+const months = [
+  { label: '1', value: '01' },{ label: '2', value: '02' },{ label: '3', value: '03' },{ label: '4', value: '04' },
+  { label: '5', value: '05' },{ label: '6', value: '06' },{ label: '7', value: '07' },{ label: '8', value: '08' },
+  { label: '9', value: '09' },{ label: '10', value: '10' },{ label: '11', value: '11' },{ label: '12', value: '12' },
+]
+
 // 查询相关
 const query = reactive({
-  year: '未选择',
-  month: '未选择',
+  year: '',
+  month: '',
   empId: '',
 });
 const years = generateYearsSelectionView()
 const searchOpt = ref<FormOptionList[]>([
   { prop: 'year', label: '年份', type: 'select', style: 'width: 100px', opts: years },
-  { prop: 'month', label: '月份', type: 'select', style: 'width: 100px', opts: [
-      { label: '1', value: '01' },{ label: '2', value: '02' },{ label: '3', value: '03' },{ label: '4', value: '04' },
-      { label: '5', value: '05' },{ label: '6', value: '06' },{ label: '7', value: '07' },{ label: '8', value: '08' },
-      { label: '9', value: '09' },{ label: '10', value: '10' },{ label: '11', value: '11' },{ label: '12', value: '12' },
-    ]
-  },
+  { prop: 'month', label: '月份', type: 'select', style: 'width: 100px', opts: months },
   { prop: 'empId', label: '工号', type: 'input', placeholder: '全匹配' },
 ])
 const handleSearch = async () => {
   var yearMonth
-  if (query.year == '未选择' || query.month == '未选择') {
+  if (query.year == '' || query.month == '') {
     yearMonth = null;
   }
   else{
@@ -115,7 +137,7 @@ const page = reactive({
 const tableData = ref<MonthlySalary[]>([]);
 const getData = async () => {
   var yearMonth = null;
-  if (query.year != '未选择' && query.month != '未选择') {
+  if (query.year != '' && query.month != '') {
     yearMonth = `${query.year}-${query.month}-01`
   }
 	const data = await listMonthlySalary({
@@ -177,14 +199,16 @@ function handleView (row: MonthlySalary) {
 const calculateVisible = ref(false)
 var calcResult = ref("未知")
 async function handleCalc() {
-  if (query.year == '未选择' || query.month == '未选择') {
+  if (calcYear.value == '' || calcMonth.value == '') {
     ElMessage.error("未选择时间")
     return
   }
-  var date = query.year + '-' + query.month
+  var date = calcYear.value + '-' + calcMonth.value
   calcResult.value = await calculateMonthlySalary({date: date})
   if(calcResult.value == '0'){
     calculateVisible.value = false
+    query.year = calcYear.value
+    query.month = calcMonth.value
     await handleSearch()
     return
   }
@@ -203,7 +227,7 @@ function handleCalcClose(){
 
 // 撤销相关
 function handelUndo() {
-  if (query.year == '未选择' || query.month == '未选择') {
+  if (query.year == '' || query.month == '') {
     ElMessage.error("未选择时间")
     return
   }
@@ -217,7 +241,7 @@ async function handleUndoMonthlySalary(date){
 
 // 审核通过相关
 function handelPass(){
-  if (query.year == '未选择' || query.month == '未选择') {
+  if (query.year == '' || query.month == '') {
     ElMessage.error("未选择时间")
     return
   }
