@@ -94,7 +94,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
           // 处理响应
           if (response.token) {
-            ElMessage.success('登录成功，令牌：' + response.token);
+            ElMessage.success('登录成功');
             localStorage.setItem('username', param.empId);
             localStorage.setItem('token', response.token) //后端给的令牌
             localStorage.setItem('userRole', param.role)
