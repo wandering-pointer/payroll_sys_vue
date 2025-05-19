@@ -71,7 +71,7 @@ import {
 } from "@/api/forMonthlySalary";
 import {MonthlySalary} from "@/types/MonthlySalary";
 import {ElMessage} from "element-plus";
-import {handleConfirm} from "@/utils/MyLittleUtils";
+import {handleConfirm, pageSize} from "@/utils/MyLittleUtils";
 
 const calcYear = ref('')
 const calcMonth = ref('')
@@ -131,7 +131,7 @@ let columns = ref([
 ])
 const page = reactive({
 	index: 1,
-	size: 10,
+	size: pageSize,
 	total: 0,
 })
 const tableData = ref<MonthlySalary[]>([]);

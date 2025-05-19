@@ -57,7 +57,7 @@ import {deleteOvertimeRecord, insertOvertimeRecord, listOvertimeRecord, updateOv
 import {OvertimeRecord} from "@/types/OvertimeRecord";
 import {convertToNumberIfPossible, labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getPolicySelectionView} from "@/api/forPolicy";
-import {formatDateTime} from "@/utils/MyLittleUtils";
+import {formatDateTime, pageSize} from "@/utils/MyLittleUtils";
 import {getEmployeeSelectionView} from "@/api/forEmployee";
 
 const policy_SV = ref<SelectionView[]>([]);
@@ -108,7 +108,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<OvertimeRecord[]>([]);

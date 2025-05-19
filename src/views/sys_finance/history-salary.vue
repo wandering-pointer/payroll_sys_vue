@@ -33,7 +33,7 @@ import {
 } from "@/api/forMonthlySalary";
 import {MonthlySalary} from "@/types/MonthlySalary";
 import {ElMessage} from "element-plus";
-import {handleConfirm} from "@/utils/MyLittleUtils";
+import {handleConfirm, pageSize} from "@/utils/MyLittleUtils";
 import {getEmployeeSelectionView} from "@/api/forEmployee";
 import {SelectionView} from "@/types/SelectionView";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
@@ -106,7 +106,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<MonthlySalary[]>([]);

@@ -28,6 +28,7 @@ import {
   listSelfAttendance,
 } from "@/api/forAttendance";
 import {Attendance} from "@/types/Attendance";
+import {pageSize} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -59,7 +60,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<Attendance[]>([]);

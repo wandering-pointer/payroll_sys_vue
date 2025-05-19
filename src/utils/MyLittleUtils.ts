@@ -54,3 +54,5 @@ export function formatDateTime(date, format = 'YYYY-MM-DDTHH:mm:ss') {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export const pageSize = 15;

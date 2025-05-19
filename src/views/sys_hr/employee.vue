@@ -79,6 +79,7 @@ import {getDepartmentSelectionView} from "@/api/forDepartment";
 import {convertToNumberIfPossible, labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getJobSelectionView} from "@/api/forJob";
 import {editEmployeeRoles, getEmployeeRoles} from "@/api/forUserAccount";
+import {pageSize} from "@/utils/MyLittleUtils";
 
 // 使用响应式引用
 const s_departmentSV = ref<SelectionView[]>([]);
@@ -150,7 +151,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<Employee[]>([]);

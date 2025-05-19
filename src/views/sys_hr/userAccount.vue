@@ -43,7 +43,7 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteUserAccount, insertUserAccount, listUserAccount, updateUserAccount} from "@/api/forUserAccount";
 import {UserAccount, userRolesSelectionView} from "@/types/UserAccount";
-import {handleConfirm} from "@/utils/MyLittleUtils";
+import {handleConfirm, pageSize} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -81,7 +81,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<UserAccount[]>([]);

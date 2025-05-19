@@ -41,7 +41,7 @@ import {
 import {Attendance} from "@/types/Attendance";
 import {SelectionView} from "@/types/SelectionView";
 import {getEmployeeSelectionView, getEmployeeSelectionView_dept} from "@/api/forEmployee";
-import {formatDateTime} from "@/utils/MyLittleUtils";
+import {formatDateTime, pageSize} from "@/utils/MyLittleUtils";
 
 const s_employeeSV_name = ref<SelectionView[]>([]);
 const employeeSV_name = computed(() => s_employeeSV_name.value);
@@ -84,7 +84,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<Attendance[]>([]);

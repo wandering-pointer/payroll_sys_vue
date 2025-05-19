@@ -55,6 +55,7 @@ import { FormOption, FormOptionList } from '@/types/form-option';
 import TableEdit from "@/components/table-edit.vue";
 import {deleteDepartment, insertDepartment, listDepartment, updateDepartment} from "@/api/forDepartment";
 import {Department} from "@/types/Department";
+import {pageSize} from "@/utils/MyLittleUtils";
 
 // 查询相关
 const query = reactive({
@@ -84,7 +85,7 @@ let columns = ref([
 ])
 const page = reactive({
 	index: 1,
-	size: 10,
+	size: pageSize,
 	total: 0,
 })
 const tableData = ref<Department[]>([]);

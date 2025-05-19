@@ -57,6 +57,7 @@ import {deleteJob, insertJob, listJob, updateJob} from "@/api/forJob";
 import {Job} from "@/types/Job";
 import {getDepartmentSelectionView} from "@/api/forDepartment";
 import {convertToNumberIfPossible, SelectionView} from "@/types/SelectionView";
+import {pageSize} from "@/utils/MyLittleUtils";
 
 // 使用响应式引用
 const departmentSelectionView = ref<SelectionView[]>([]);
@@ -101,7 +102,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<Job[]>([]);

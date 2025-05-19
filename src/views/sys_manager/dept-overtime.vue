@@ -58,7 +58,7 @@ import {deleteDeptOvertimeRecord, insertDeptOvertimeRecord, listDeptOvertimeReco
 import {OvertimeRecord} from "@/types/OvertimeRecord";
 import {convertToNumberIfPossible, labelToValueLabel, SelectionView} from "@/types/SelectionView";
 import {getPolicySelectionView} from "@/api/forPolicy";
-import {formatDateTime} from "@/utils/MyLittleUtils";
+import {formatDateTime, pageSize} from "@/utils/MyLittleUtils";
 import {getCurrentUserDeptName, getEmployeeSelectionView, getEmployeeSelectionView_dept} from "@/api/forEmployee";
 
 const deptName = ref('无数据')
@@ -110,7 +110,7 @@ let columns = ref([
 ])
 const page = reactive({
   index: 1,
-  size: 10,
+  size: pageSize,
   total: 0,
 })
 const tableData = ref<OvertimeRecord[]>([]);
