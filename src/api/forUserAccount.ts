@@ -47,3 +47,11 @@ export const editEmployeeRoles = (data) =>{
         data: data,
     });
 }
+
+export const changePassword = (data) =>{
+    return request({
+        url: '/userAccount/changePassword',
+        method: 'post',
+        data: data,
+    });
+}

@@ -178,6 +178,14 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/delf-bonds.vue'),
             },
+            {
+                path: '/self/password',
+                meta: {
+                    title: '修改密码',
+                    permiss: '103',
+                },
+                component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_self/change-pwd.vue'),
+            },
         ],
     },
     {

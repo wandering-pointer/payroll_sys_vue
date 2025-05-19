@@ -107,6 +107,12 @@ export const menuData: Menus[] = [
                 index: '/self/bonds',
                 title: '个人年终奖记录',
             },
+            {
+                id: '103-5',
+                pid: '9',
+                index: '/self/password',
+                title: '修改密码',
+            },
         ],
     },
     {
