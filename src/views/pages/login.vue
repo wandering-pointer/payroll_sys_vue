@@ -32,7 +32,7 @@
               <el-form-item label="用户角色" prop="selectedRole">
                 <el-select v-model="param.role" placeholder="请选择">
                   <el-option key="ROOT" label="超级管理员" value="ROOT"></el-option>
-                  <el-option key="ADMIN" label="系统运维" value="ADMIN"></el-option>
+                  <el-option key="ADMIN" label="系统管理员" value="ADMIN"></el-option>
                   <el-option key="HR" label="人力资源管理员" value="HR"></el-option>
                   <el-option key="MANAGER" label="部门经理" value="MANAGER"></el-option>
                   <el-option key="FINANCE" label="财务管理员" value="FINANCE"></el-option>

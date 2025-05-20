@@ -101,12 +101,6 @@ export const menuData: Menus[] = [
                 index: '/self/bonds',
                 title: '个人年终奖记录',
             },
-            {
-                id: '103-5',
-                pid: '9',
-                index: '/self/password',
-                title: '修改密码',
-            },
         ],
     },
     {
@@ -174,5 +168,11 @@ export const menuData: Menus[] = [
                 title: '全司加班记录',
             },
         ],
+    },
+    {
+        id: 'pwd',
+        title: '修改密码',
+        index: '/self/password',
+        icon: 'Lock',
     },
 ];
