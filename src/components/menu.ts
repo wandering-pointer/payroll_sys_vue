@@ -32,12 +32,6 @@ export const menuData: Menus[] = [
                 title: '员工管理',
             },
             {
-                id: '101-4',
-                pid: '7',
-                index: '/hr/userAccount',
-                title: '账号管理',
-            },
-            {
                 id: '101-5',
                 pid: '7',
                 index: '/hr/policy',
@@ -138,6 +132,20 @@ export const menuData: Menus[] = [
                 pid: '10',
                 index: '/finance/bonds',
                 title: '年终奖管理',
+            },
+        ],
+    },
+    {
+        id: '105',
+        icon: 'Lock',
+        index: '11',
+        title: '系统管理员功能',
+        children: [
+            {
+                id: '105-1',
+                pid: '11',
+                index: '/admin/userAccount',
+                title: '账号管理',
             },
         ],
     },

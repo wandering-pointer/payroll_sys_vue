@@ -67,10 +67,10 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/employee.vue'),
             },
             {
-                path: '/hr/userAccount',
+                path: '/admin/userAccount',
                 meta: {
                     title: '账号管理',
-                    permiss: '101',
+                    permiss: '105',
                 },
                 component: () => import(/* webpackChunkName: "statistic" */ '../views/sys_hr/userAccount.vue'),
             },
