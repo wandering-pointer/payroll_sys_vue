@@ -227,11 +227,11 @@ function handleCalcClose(){
 
 // 撤销相关
 function handelUndo() {
-  if (query.year == '' || query.month == '') {
+  if (calcYear.value == '' || calcMonth.value == '') {
     ElMessage.error("未选择时间")
     return
   }
-  const date = query.year + '-' + query.month;
+  const date = calcYear.value + '-' + calcMonth.value;
   handleConfirm("撤销", handleUndoMonthlySalary, {date: date})
 }
 async function handleUndoMonthlySalary(date){
@@ -241,11 +241,11 @@ async function handleUndoMonthlySalary(date){
 
 // 审核通过相关
 function handelPass(){
-  if (query.year == '' || query.month == '') {
+  if (calcYear.value == '' || calcMonth.value == '') {
     ElMessage.error("未选择时间")
     return
   }
-  const date = query.year + '-' + query.month;
+  const date = calcYear.value + '-' + calcMonth.value;
   handleConfirm("通过", handlePassMonthlySalary, {date: date})
 }
 async function handlePassMonthlySalary(date) {
